@@ -1,0 +1,198 @@
+load('depth_.mat')
+load('cdi_rho_.mat')
+load('mat_cdi_time.mat')
+% close all
+mat = mat_cdi;
+
+%{
+    kk = 2;
+    figure(Position=[200 200 500 500])
+    semilogx(cdi_rho_(kk,:),depth_(kk,:),'-ro','LineWidth',1.2)
+    set(gca,'ydir','reverse')
+    set(gca,'xdir','reverse')
+    title(['测点',num2str(kk)])
+    grid on
+    xlabel('rho(ohm*m)')
+    ylabel('Depth(m)')
+%}
+
+
+nolayer = 5;
+% ns=24;
+
+rho_pro = zeros(ns, nolayer);
+dep_pro = zeros(ns, nolayer);
+thrbank = ones(ns, nolayer+1);
+for i = 1:ns
+    thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
+%     thrbank(i,:) = [99	1	0.05	3e-3 1e-96  1e-97 ];
+    % thrbank(2,:) = [10	1	0.1	0.01	0.001 1e-6];
+    % 个性化定制
+    if i == 2
+%         thrbank(i,3) = 0.15;
+    elseif i == 5
+%         thrbank(i,4) = 0.0239277;
+    end
+
+end
+
+
+
+for i=1:ns
+    thr = thrbank(i,:);
+
+    if(i==6)
+        1;
+    end
+    count = zeros(nolayer,1);
+    max_rec = zeros(nolayer,1);
+    
+    for j=1:size(mat,2)
+
+        depth = j/100;
+        
+        flag=0;
+        for k=1:nolayer
+            if(k==2)
+                1;
+            end
+            if(mat(i,j)<=thr(k) && mat(i,j) > thr(k+1))
+                count(k) = count(k)+1;
+                rho_pro(i,k) = rho_pro(i,k) +mat(i,j);
+                dep_pro(i,k) = depth;
+                
+                flag=1;
+                break
+            end
+        end
+        
+        if(flag==0)
+            if mat(i,j) ~= 100
+                1;
+            end
+            count(nolayer) = count(nolayer)+1; % 最后一层
+            rho_pro(i,nolayer) = rho_pro(i,nolayer) +mat(i,j);
+            dep_pro(i,nolayer) = depth;
+        end
+    end
+    if i == 13
+        1;
+    end
+    rho_pro(i,:) = rho_pro(i,:)./count';
+
+
+    rho_pro(isnan(rho_pro)) = 100;
+    dep_pro(dep_pro == 0) = total_depth-0.1; % 防止dep_pro1最后一列减为0
+    
+    tmp = rho_pro;
+%     rho_pro(i, [1,2,3,4,5,6,7 ]) = tmp(i, [1,2,3,3,4,4,5]);
+    
+    %中间两层插值
+%     tmp = dep_pro;
+%     dep_pro(i,3) = 0.5*( tmp(i,2) + tmp(i,3));
+%     dep_pro(i,4) = tmp(i,3);
+%     dep_pro(i,5) = 0.5*( tmp(i,3) + tmp(i,4));
+%     dep_pro(i,6) = tmp(i,4);
+
+end
+
+% p = [1 6 7 8 9 12 13 14 15];
+% rho_pro(p,2) = (rho_pro(p,2) + rho_pro(p,3)) /2;
+% rho_pro(p,3) = rho_pro(p,2);
+rho_pro(rho_pro<0.01) = 0.01;
+
+%% 初始厚度都设置为5m试试
+% for k = 1:ns
+% dep_pro(k,:) = 3*(1:nolayer);
+% end
+
+scale_factor = 100;
+%%
+mat = zeros(ns, total_depth*scale_factor);
+
+for x = 1:ns
+
+    for y = 1:total_depth*scale_factor
+        y1 = y/scale_factor;
+        for nn=1:nolayer
+            if(nn==1)
+                if(y1<=dep_pro(x, nn))
+                    mat(x,y)=rho_pro(x,nn);
+                end
+            else
+                if(y1<=dep_pro(x, nn) && y1>dep_pro(x, nn-1))
+                    mat(x,y)=rho_pro(x,nn);
+                end
+            end
+            
+        end
+    end
+end
+
+
+y = 0:0.01:total_depth-0.01;
+x = 1:ns+1; mat = [mat;zeros(1,total_depth*scale_factor)];
+figure(Position=[737	342.333333333333	991.333333333333	650.666666666667])
+pcolor(x*0.5,y,log10(mat'))
+shading flat
+colormap jet
+xlabel('X axis (m)','FontName','Calibri','FontSize',15,'FontWeight','bold')
+ylabel('Z axis (m)','FontName','Calibri','FontSize',15,'FontWeight','bold')
+h=colorbar;
+set(get(h,'title'),'string','log10(\rho)');
+caxis([-4,2])
+title('Apparent resistivity imaging')
+set(gca,'FontName','Calibri','FontSize',12,'FontWeight','bold')
+set(gca,'ydir','reverse')
+for i = 1:ns
+%     scatter(i-0.25,1,'^')
+        text(i*0.5+0.25, 3, num2str(i), ...
+        'HorizontalAlignment', 'center', ...
+        'VerticalAlignment', 'bottom', 'FontSize', 12);
+end
+
+
+
+%% save to txt
+rho_pro1 = zeros(ns*nolayer,1);
+dep_pro1 = zeros(ns*nolayer,1);
+
+for i=1:size(rho_pro,1)
+    if(i==14)
+        1;
+    end
+    for j=1:size(rho_pro,2)
+        
+%         if(rho_pro(i,j)<=0.001)
+%             rho_pro1(j+(i-1)*size(rho_pro,2)) = 10.0;
+%         else
+            rho_pro1(j+(i-1)*size(rho_pro,2)) = rho_pro(i,j);
+%         end
+        
+        if(j==1)
+            dep_pro1(j+(i-1)*size(rho_pro,2)) = dep_pro(i,j);
+        else
+            dep_pro1(j+(i-1)*size(rho_pro,2)) = dep_pro(i,j)-dep_pro(i,j-1);
+        end
+        
+    end
+end
+
+dep_pro1(dep_pro1<=0) = 1;
+
+save('rho_pro_tunnel_20ms.txt','rho_pro1','-ascii')
+save('dep_pro_tunnel_20ms.txt','dep_pro1','-ascii')
+
+%{
+figure
+imagesc(delta_pset*(pset-min(pset)),y,log10(mat'))
+colormap jet
+xlabel('X axis (m)','FontName','Calibri','FontSize',15,'FontWeight','bold')
+ylabel('Z axis (m)','FontName','Calibri','FontSize',15,'FontWeight','bold')
+h=colorbar;
+set(get(h,'title'),'string','log10(\rho)');
+% caxis([-5,5])
+title('Apparent resistivity imaging')
+set(gca,'FontName','Calibri','FontSize',12,'FontWeight','bold')
+caxis([-4,2])
+%}
