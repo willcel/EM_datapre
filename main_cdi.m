@@ -46,7 +46,7 @@ xr = 0.58;    % 中心距
 % step3                          % 滤波
 % step4_write_txt                  % 将原始数据写入文件
 
-% {
+% { 
 % -----------
 path_cdi = ['.\CDI_code\'];   % 视电阻率成像的程序所在文件夹
 para = [nt; ns; nturn; nturn1; t_st; t_ed; xr; hr; rt; rr];

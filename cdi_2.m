@@ -57,7 +57,7 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = [33*ones(1,4) 39 40 43 34 27 22 24 20 23 25 35 28 30];
+    ntstop = [27 25 34 29 37 42 44 32 31 22 34 27 34 34 33 34 34];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17
     for i=1:ntstop(uu)%nt
         
@@ -150,12 +150,12 @@ figure(Position=[1221	313.666666666667	784	625.333333333333])
 
 % imagesc(delta_pset*(pset-min(pset)),y,log10(mat'))
 
-% pcolor(delta_pset*(pset),y,log10(mat'))
-% shading flat
+pcolor(delta_pset*(pset),y,log10(mat'))
+shading flat
 
-pcolor(delta_pset*(pset-min(pset)),y,log10(mat'))
-shading interp
-xlim([0 8])
+% pcolor(delta_pset*(pset-min(pset)),y,log10(mat'))
+% shading interp
+% xlim([0 8])
 
 colormap jet
 xlabel('Measurement Line / m','FontSize',15,'FontWeight','bold')
@@ -170,12 +170,12 @@ set(gca,'FontSize',18,'FontWeight','bold')
 % set(gca,'yticklabel',{'10','8','6','4','2'});
 set(gca,'ydir','reverse')
 hold on
-% for i = 1:ns
-% %     scatter(i-0.25,1,'^')
-%         text(i*0.5+0.25, 3, num2str(i), ...
-%         'HorizontalAlignment', 'center', ...
-%         'VerticalAlignment', 'bottom', 'FontSize', 12);
-% end
+for i = 1:ns
+%     scatter(i-0.25,1,'^')
+        text(i*0.5+0.25, 3, num2str(i), ...
+        'HorizontalAlignment', 'center', ...
+        'VerticalAlignment', 'bottom', 'FontSize', 12);
+end
 %{
     figure
     ns1 = mat(1,:);

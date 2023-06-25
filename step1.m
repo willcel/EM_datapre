@@ -17,10 +17,12 @@ for k = 1:ns
     data_offset = [];
     current_offset = [];
 
-    for i = 1:numel(txt_files)
+    for i = 1:20%numel(txt_files)
         i
         % 读取 CSV 文件
-        filename = fullfile(folder_path, ['测点',num2str(k)],txt_files(i).name);
+        % filename = fullfile(folder_path, ['测点',num2str(k)],txt_files(i).name)
+        % 需要严格选前20次
+        filename = fullfile(folder_path, ['测点',num2str(k)],[num2str(i),'.save_data_time.txt']);
 
         [A,B,C] = textread(filename,'%s %s %s', 'headerlines', 1);   % 读取十六进制数据
         

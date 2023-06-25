@@ -287,6 +287,7 @@ signal_sample = filtered_sec_field(:,ind_time);
 % signal_sample(22,:) = signal_sample(2,:);
 % signal_sample(23,:) = signal_sample(2,:);
 %%
+%{
 figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
 k=1;
 for i= 1:ns%
@@ -308,6 +309,34 @@ grid on
 % legend('5','6','7','8','9')
 legend(legend_str1,'NumColumns',4)
 set(gca,'FontSize',24,'FontWeight','bold')
+%}
+
+% {
+% 单挑线画图保存，取点
+k=1;
+for i= 1:ns%
+    figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
+    loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
+    
+    hold on
+    xlabel('time (ms)')
+    ylabel('voltage (V)')
+    legend_str1 = ['测点',num2str(i)];
+    for j = 1:nt
+        text(time_sample(j)*1000, signal_sample(i,j), num2str(j), ...
+        'HorizontalAlignment', 'center', ...
+        'VerticalAlignment', 'bottom', 'FontSize', 10);
+    end
+    grid on
+    legend(legend_str1,'NumColumns',4)
+    set(gca,'FontSize',24,'FontWeight','bold')
+    savefolder = '.\rawVolt';
+    savefileName = fullfile(savefolder, [legend_str1,'.tif']);
+    saveas(gcf, savefileName)
+    close all
+end
+%}
+
 
 
 %%
@@ -325,11 +354,11 @@ grid on
 set(gca,'FontSize',14,'FontWeight','bold')
 xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 
-% for i = 1:ns
-%     text(0.5*(i-1), 1e3 * signal_sample(i,2), ['测点',num2str(i)], ...
-%     'HorizontalAlignment', 'center', ...
-%     'VerticalAlignment', 'bottom', 'FontSize', 16);
-% end
+for i = 1:ns
+    text(0.5*(i-1), 1e3 * signal_sample(i,2), ['测点',num2str(i)], ...
+    'HorizontalAlignment', 'center', ...
+    'VerticalAlignment', 'bottom', 'FontSize', 16);
+end
 
 线性坐标系的剖面图
 

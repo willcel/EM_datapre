@@ -28,10 +28,8 @@ for i = 1:ns
 %     thrbank(i,:) = [99	1	0.05	3e-3 1e-96  1e-97 ];
     % thrbank(2,:) = [10	1	0.1	0.01	0.001 1e-6];
     % 个性化定制
-    if i == 2
-%         thrbank(i,3) = 0.15;
-    elseif i == 5
-%         thrbank(i,4) = 0.0239277;
+    if ismember(i,[4 5 8])
+        thrbank(i,4) = 3e-2;
     end
 
 end
