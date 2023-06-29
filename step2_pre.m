@@ -4,7 +4,6 @@
 % clear
 % close all
 
-% ns = 17;
 
 point1set = [];
 point2set = [];
@@ -63,17 +62,6 @@ for k=1:ns
     if k == 17
         1;
     end
-
-%     data_avg_all2(k,:) = data_avg_all(k,point1:end);
-%     current_avg_all2(k,:) = current_avg_all(k,point1:end);
-%     time = (1:(size(data_avg_all,2)-point1+1)) .*dt;
-%     
-%     point2 = point2 - point1;
-%     point3 = point3 - point1;
-%     index_peak = index_peak - point1;
-%     point1 = 1;
-     
-    
     
 end
 

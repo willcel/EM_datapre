@@ -5,7 +5,7 @@ load('mat_cdi_time.mat')
 mat = mat_cdi;
 
 %{
-    kk = 2;
+    kk = 6;
     figure(Position=[200 200 500 500])
     semilogx(cdi_rho_(kk,:),depth_(kk,:),'-ro','LineWidth',1.2)
     set(gca,'ydir','reverse')
@@ -24,12 +24,12 @@ rho_pro = zeros(ns, nolayer);
 dep_pro = zeros(ns, nolayer);
 thrbank = ones(ns, nolayer+1);
 for i = 1:ns
-    thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
+    thrbank(i,:) = [99	0.2	0.05 1e-2 1e-96  1e-97 ];
 %     thrbank(i,:) = [99	1	0.05	3e-3 1e-96  1e-97 ];
     % thrbank(2,:) = [10	1	0.1	0.01	0.001 1e-6];
     % 个性化定制
-    if ismember(i,[4 5 8])
-        thrbank(i,4) = 3e-2;
+    if ismember(i,[3,6,7])
+        thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
     end
 
 end
@@ -39,9 +39,6 @@ end
 for i=1:ns
     thr = thrbank(i,:);
 
-    if(i==6)
-        1;
-    end
     count = zeros(nolayer,1);
     max_rec = zeros(nolayer,1);
     
@@ -51,9 +48,7 @@ for i=1:ns
         
         flag=0;
         for k=1:nolayer
-            if(k==2)
-                1;
-            end
+
             if(mat(i,j)<=thr(k) && mat(i,j) > thr(k+1))
                 count(k) = count(k)+1;
                 rho_pro(i,k) = rho_pro(i,k) +mat(i,j);
@@ -73,31 +68,48 @@ for i=1:ns
             dep_pro(i,nolayer) = depth;
         end
     end
-    if i == 13
-        1;
-    end
+
     rho_pro(i,:) = rho_pro(i,:)./count';
-
-
-    rho_pro(isnan(rho_pro)) = 100;
-    dep_pro(dep_pro == 0) = total_depth-0.1; % 防止dep_pro1最后一列减为0
-    
-    tmp = rho_pro;
-%     rho_pro(i, [1,2,3,4,5,6,7 ]) = tmp(i, [1,2,3,3,4,4,5]);
-    
-    %中间两层插值
-%     tmp = dep_pro;
-%     dep_pro(i,3) = 0.5*( tmp(i,2) + tmp(i,3));
-%     dep_pro(i,4) = tmp(i,3);
-%     dep_pro(i,5) = 0.5*( tmp(i,3) + tmp(i,4));
-%     dep_pro(i,6) = tmp(i,4);
+   
 
 end
 
-% p = [1 6 7 8 9 12 13 14 15];
-% rho_pro(p,2) = (rho_pro(p,2) + rho_pro(p,3)) /2;
-% rho_pro(p,3) = rho_pro(p,2);
-rho_pro(rho_pro<0.01) = 0.01;
+
+rho_pro(isnan(rho_pro)) = 100;
+dep_pro(dep_pro(:,nolayer-1)==0,nolayer-1) = total_depth-0.1; % 防止dep_pro1最后一列减为0
+
+% use interpolation is better
+% tmp_dep_pro = dep_pro;
+% tmp_rho_pro = rho_pro;
+% for i = 1:ns
+%     for j = 2:nolayer-1
+%         if ~ (tmp_dep_pro(i,j) >= dep_pro(i,j-1) && tmp_dep_pro(i,j) <= dep_pro(i,j+1))
+%             tmp_dep_pro(i,j) = (dep_pro(i,j-1) + dep_pro(i,j+1)) /2;
+%         end
+%         if isnan(tmp_rho_pro(i,j)) % ~(rho_pro(i,j) >= rho_pro(i,j-1) && rho_pro(i,j) <= rho_pro(i,j+1)) || isnan(rho_pro(i,j))
+%             tmp_rho_pro(i,j) = (rho_pro(i,j-1) + rho_pro(i,j+1)) /2;
+%         end
+%     end
+% end
+% dep_pro = tmp_dep_pro;
+% rho_pro = tmp_rho_pro;
+
+
+% rho_pro(rho_pro<0.01) = 0.01;
+rho_pro(12,3) = 0.003;
+
+% 由于原始响应非单调，dep_pro出现异常，前比后深
+dep_pro([11,14],[3 4]) = dep_pro([11,14],[4 3]);
+rho_pro([11,14],4) = 0.003;
+
+% 低阻层太厚了，也许，反演会必须把它变高阻，不然响应太大？
+dep_pro(13,3) = 6;
+
+% 
+dep_pro([17],[3 4]) = dep_pro([17],[4 3]); 
+rho_pro([17],4) = 0.003;
+rho_pro([19],3) = 0.003;
+
 
 %% 初始厚度都设置为5m试试
 % for k = 1:ns
@@ -129,9 +141,9 @@ end
 
 
 y = 0:0.01:total_depth-0.01;
-x = 1:ns+1; mat = [mat;zeros(1,total_depth*scale_factor)];
+xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
 figure(Position=[737	342.333333333333	991.333333333333	650.666666666667])
-pcolor(x*0.5,y,log10(mat'))
+pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
 shading flat
 colormap jet
 xlabel('X axis (m)','FontName','Calibri','FontSize',15,'FontWeight','bold')
@@ -144,7 +156,7 @@ set(gca,'FontName','Calibri','FontSize',12,'FontWeight','bold')
 set(gca,'ydir','reverse')
 for i = 1:ns
 %     scatter(i-0.25,1,'^')
-        text(i*0.5+0.25, 3, num2str(i), ...
+        text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
         'HorizontalAlignment', 'center', ...
         'VerticalAlignment', 'bottom', 'FontSize', 12);
 end

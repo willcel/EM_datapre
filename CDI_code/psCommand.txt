@@ -1,0 +1,2 @@
+start ubuntu
+cd /mnt/d/0628五棵松相关/EM_datapre/CDI_code && gfortran -o runfile main.f90 && ./runfile

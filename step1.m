@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\新年工作\0602数据测线1\0602-1M放大器';
+folder_path = 'D:\新年工作\0628五棵松\测线1';
 % ns = 17;
 % fs = 1e6;
 
@@ -11,18 +11,18 @@ current_avg_all = [];
 for k = 1:ns
     k
     % 获取文件夹内所有的 txt 文件名
-    txt_files = dir(fullfile(folder_path,['测点',num2str(k)], '*.txt'));
+    txt_files = dir(fullfile(folder_path,['测点',num2str(k)],'save_time_data', '*.save_data_time.txt'));
     
     % 对每个 CSV 文件进行处理
     data_offset = [];
     current_offset = [];
 
-    for i = 1:20%numel(txt_files)
+    for i = 1:numel(txt_files)
         i
         % 读取 CSV 文件
         % filename = fullfile(folder_path, ['测点',num2str(k)],txt_files(i).name)
         % 需要严格选前20次
-        filename = fullfile(folder_path, ['测点',num2str(k)],[num2str(i),'.save_data_time.txt']);
+        filename = fullfile(folder_path, ['测点',num2str(k)],'save_time_data',[num2str(i),'.save_data_time.txt']);
 
         [A,B,C] = textread(filename,'%s %s %s', 'headerlines', 1);   % 读取十六进制数据
         

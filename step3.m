@@ -70,7 +70,7 @@ for i=1:ns
     % low pass filter 30kHz
     sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir');
     sfx2 = sfx1(:,index:end);
-    ind_neg = find(sfx2<0);
+    ind_neg = find(sfx2<0); 
     ind_paint = find(sfx2>0);
 %     figure
 %     semilogy(ind_paint, sfx2(ind_paint),'.')
@@ -86,11 +86,12 @@ for i=1:ns
 %     sfx(index_sfx) = 10^(-7);
     
 
-% %     close all
 %     sizeNum = [50	100	100	200	200	400	400	800	800	800	1000    ];
     sizeNum = [50	100	200	300	300	600	600	1000	1000 1000	1000  ];
+    if(ismember(i,12))
+        sizeNum = [50	100	200	500	600	1000	1000	1000	1000 1000	1000 ];
+    end
 %     sizeNum = 5*ones(1,17);
-    % sizeNum = [[50	100	100	200	200	400	400 800],	[2000	3000	4000    ]];
     j=1;
     %% 2.3ms
     windowSize = sizeNum(j); j=j+1;
@@ -314,7 +315,7 @@ set(gca,'FontSize',24,'FontWeight','bold')
 % {
 % 单挑线画图保存，取点
 k=1;
-for i= 1:ns%
+for i= 12%1:ns%
     figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
     
@@ -331,6 +332,12 @@ for i= 1:ns%
     legend(legend_str1,'NumColumns',4)
     set(gca,'FontSize',24,'FontWeight','bold')
     savefolder = '.\rawVolt';
+
+    if ~exist(savefolder, 'dir')
+        mkdir(savefolder);
+        disp(['Folder "', savefolder, '" created.']);
+    end
+
     savefileName = fullfile(savefolder, [legend_str1,'.tif']);
     saveas(gcf, savefileName)
     close all
@@ -341,7 +348,8 @@ end
 
 %%
 %{
-figure
+
+figure('Position', [200	200	2060	1028])
 for i=1:nt
     semilogy(delta_pset.*(pset-min(pset)), 1e3 * signal_sample(:,i))
     hold on
@@ -354,11 +362,16 @@ grid on
 set(gca,'FontSize',14,'FontWeight','bold')
 xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 
+xlabel_pos = delta_pset.*(pset-min(pset));
 for i = 1:ns
-    text(0.5*(i-1), 1e3 * signal_sample(i,2), ['测点',num2str(i)], ...
+    text(xlabel_pos(i), 1e3 * signal_sample(i,2), ['',num2str(i)], ...
     'HorizontalAlignment', 'center', ...
     'VerticalAlignment', 'bottom', 'FontSize', 16);
 end
+savefileName = fullfile(savefolder, ['poumian.tif']);
+saveas(gcf, savefileName)
+close all
+
 
 线性坐标系的剖面图
 

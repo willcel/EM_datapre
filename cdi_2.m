@@ -57,7 +57,7 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = [27 25 34 29 37 42 44 32 31 22 34 27 34 34 33 34 34];
+    ntstop = [25 24 16 23 27 19 16 24 25 26 33 28 52 36 26 26 35 47 29 47 38 47 23];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17
     for i=1:ntstop(uu)%nt
         
@@ -110,6 +110,8 @@ for uu=1:ns
     cdi_rho_ = [cdi_rho_; cdi_rho];
 end
 
+% avoid incorrect cdi_rho_ value. Due to incorrect voltage.
+cdi_rho_(:,1) = cdi_rho_(:,2) +0.2;
 
 %%
 nolayer = nt;         % ²ãÊý
@@ -142,15 +144,17 @@ end
 dy = 1/scale_factor;
 y = 0:dy:total_depth-dy;
 % y = total_depth-dy:-dy:0;
-pset = 1:ns+1; mat = [mat;zeros(1,total_depth*scale_factor)];
+
+
+xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
 % figure(Position=[1221	188.333333333333	1244	850.666666666667]) 
-figure(Position=[1221	313.666666666667	784	625.333333333333]) 
+figure(Position=[383.666666666667	189.666666666667	1646	800.666666666667]) 
 
 %  get(gcf,'Position')
 
 % imagesc(delta_pset*(pset-min(pset)),y,log10(mat'))
 
-pcolor(delta_pset*(pset),y,log10(mat'))
+pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
 shading flat
 
 % pcolor(delta_pset*(pset-min(pset)),y,log10(mat'))
@@ -172,7 +176,7 @@ set(gca,'ydir','reverse')
 hold on
 for i = 1:ns
 %     scatter(i-0.25,1,'^')
-        text(i*0.5+0.25, 3, num2str(i), ...
+        text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
         'HorizontalAlignment', 'center', ...
         'VerticalAlignment', 'bottom', 'FontSize', 12);
 end
