@@ -114,6 +114,7 @@ end
 % avoid incorrect cdi_rho_ value. Due to incorrect voltage.
 % cdi_rho_(:,1) = cdi_rho_(:,2) +0.2;
 
+
 %%
 nolayer = nt;         % 层数
 
@@ -156,11 +157,11 @@ figure(Position=[383.666666666667	189.666666666667	1646	800.666666666667])
 % imagesc(delta_pset*(pset-min(pset)),y,log10(mat'))
 
 pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
-shading flat
+% shading flat
 
-% pcolor(delta_pset*(pset-min(pset)),y,log10(mat'))
-% shading interp
-% xlim([0 8])
+shading interp
+xlim([0 xdraw_range(end)- min(xdraw_range)-1])
+% saveas(gcf,'cdiRes.tif')
 
 colormap jet
 xlabel('Measurement Line / m','FontSize',15,'FontWeight','bold')
@@ -175,12 +176,12 @@ set(gca,'FontSize',18,'FontWeight','bold')
 % set(gca,'yticklabel',{'10','8','6','4','2'});
 set(gca,'ydir','reverse')
 hold on
-for i = 1:ns
-%     scatter(i-0.25,1,'^')
-        text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
-        'HorizontalAlignment', 'center', ...
-        'VerticalAlignment', 'bottom', 'FontSize', 12);
-end
+% for i = 1:ns
+% %     scatter(i-0.25,1,'^')
+%         text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
+%         'HorizontalAlignment', 'center', ...
+%         'VerticalAlignment', 'bottom', 'FontSize', 12);
+% end
 
 % for y = 1:15
 %     % 使用line函数绘制横线
