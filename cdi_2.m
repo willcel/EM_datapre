@@ -57,8 +57,9 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = [25 24 16 23 27 19 16 24 25 26 33 28 52 36 26 26 35 47 29 47 38 47 23];
-             % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17
+    ntstop = [26 27 38 28 31 20 26 34 37 31 34 36 20 23 23 25 23 21 18 23 26 19 25 18 27 34 19 29];
+             % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
+
     for i=1:ntstop(uu)%nt
         
         minerr = 1000;
@@ -111,7 +112,7 @@ for uu=1:ns
 end
 
 % avoid incorrect cdi_rho_ value. Due to incorrect voltage.
-cdi_rho_(:,1) = cdi_rho_(:,2) +0.2;
+% cdi_rho_(:,1) = cdi_rho_(:,2) +0.2;
 
 %%
 nolayer = nt;         % 层数
@@ -179,6 +180,19 @@ for i = 1:ns
         text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
         'HorizontalAlignment', 'center', ...
         'VerticalAlignment', 'bottom', 'FontSize', 12);
+end
+
+% for y = 1:15
+%     % 使用line函数绘制横线
+%     line([0, 25], [y, y], 'Color', 'r');
+%     text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+% end
+
+tmp = [9 8 7 6 7 5 7 9 8.5 6.5 8 8.5 7 7 7 7 7 7 7 9 9 6 5 7 7 6 6 4];
+% xdraw_range
+for i = 1:ns
+%     line( -1+[xdraw_range(i),xdraw_range(i+1)] , [tmp(i),tmp(i)] , 'Color', 'r' )
+
 end
 %{
     figure

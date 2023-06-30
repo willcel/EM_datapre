@@ -24,12 +24,12 @@ rho_pro = zeros(ns, nolayer);
 dep_pro = zeros(ns, nolayer);
 thrbank = ones(ns, nolayer+1);
 for i = 1:ns
-    thrbank(i,:) = [99	0.2	0.05 1e-2 1e-96  1e-97 ];
+    thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
 %     thrbank(i,:) = [99	1	0.05	3e-3 1e-96  1e-97 ];
     % thrbank(2,:) = [10	1	0.1	0.01	0.001 1e-6];
     % 个性化定制
     if ismember(i,[3,6,7])
-        thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
+%         thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
     end
 
 end
@@ -95,20 +95,6 @@ dep_pro(dep_pro(:,nolayer-1)==0,nolayer-1) = total_depth-0.1; % 防止dep_pro1�
 % rho_pro = tmp_rho_pro;
 
 
-% rho_pro(rho_pro<0.01) = 0.01;
-rho_pro(12,3) = 0.003;
-
-% 由于原始响应非单调，dep_pro出现异常，前比后深
-dep_pro([11,14],[3 4]) = dep_pro([11,14],[4 3]);
-rho_pro([11,14],4) = 0.003;
-
-% 低阻层太厚了，也许，反演会必须把它变高阻，不然响应太大？
-dep_pro(13,3) = 6;
-
-% 
-dep_pro([17],[3 4]) = dep_pro([17],[4 3]); 
-rho_pro([17],4) = 0.003;
-rho_pro([19],3) = 0.003;
 
 
 %% 初始厚度都设置为5m试试

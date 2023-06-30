@@ -88,8 +88,16 @@ for i=1:ns
 
 %     sizeNum = [50	100	100	200	200	400	400	800	800	800	1000    ];
     sizeNum = [50	100	200	300	300	600	600	1000	1000 1000	1000  ];
-    if(ismember(i,12))
-        sizeNum = [50	100	200	500	600	1000	1000	1000	1000 1000	1000 ];
+    if(ismember(i,[2 6 ]))
+        sizeNum = [50	100	200	300	1000	1000	1000	1000	1000 1000	1000 ];
+    elseif(ismember(i,[8 9]))
+        sizeNum = [50	100	200	300	1000	2000	2000	2000	2000 1000	1000 ];
+    elseif(ismember(i,[11]))
+        sizeNum = [50	100	200	300	1000	1500	1000	1000	1000 1000	1000 ];
+    elseif(ismember(i,[12]))
+        sizeNum = [50	100	200	300	1000	2000	3000	1000	1000 1000	1000 ];
+    elseif(ismember(i,[20]))
+        sizeNum = [50	100	800	1000	1000	2000	3000	1000	1000 1000	1000 ];
     end
 %     sizeNum = 5*ones(1,17);
     j=1;
@@ -152,7 +160,7 @@ for i=1:ns
     
     filter_signal = [filter_signal, y(filter_index3:filter_index4-1)];
     
-    %% 5ms
+    %% 5ms -para 6
     windowSize = sizeNum(j); j=j+1;
     
     
@@ -312,10 +320,13 @@ legend(legend_str1,'NumColumns',4)
 set(gca,'FontSize',24,'FontWeight','bold')
 %}
 
+% signal_sample(17,[22 23 24]) = [1.4 1.3 1.3]*1E-5;
+signal_sample(20,[6 7]) = [4.5E-5 2.8E-5];
+
 % {
 % 单挑线画图保存，取点
 k=1;
-for i= 12%1:ns%
+for i= 8%1:ns%
     figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
     
@@ -340,7 +351,7 @@ for i= 12%1:ns%
 
     savefileName = fullfile(savefolder, [legend_str1,'.tif']);
     saveas(gcf, savefileName)
-    close all
+%     close all
 end
 %}
 
@@ -368,6 +379,9 @@ for i = 1:ns
     'HorizontalAlignment', 'center', ...
     'VerticalAlignment', 'bottom', 'FontSize', 16);
 end
+
+legend('')
+
 savefileName = fullfile(savefolder, ['poumian.tif']);
 saveas(gcf, savefileName)
 close all
