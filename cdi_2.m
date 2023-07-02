@@ -57,7 +57,7 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = [26 27 38 28 31 20 26 34 37 31 34 36 20 23 23 25 23 21 18 23 26 19 25 18 27 34 19 29];
+    ntstop = [36 22 28 37 36 36 17 31 27 35 5 29 29 30 31];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
 
     for i=1:ntstop(uu)%nt
@@ -157,10 +157,10 @@ figure(Position=[383.666666666667	189.666666666667	1646	800.666666666667])
 % imagesc(delta_pset*(pset-min(pset)),y,log10(mat'))
 
 pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
-% shading flat
+shading flat
 
-shading interp
-xlim([0 xdraw_range(end)- min(xdraw_range)-1])
+% shading interp
+% xlim([0 xdraw_range(end)- min(xdraw_range)-1])
 % saveas(gcf,'cdiRes.tif')
 
 colormap jet
@@ -183,11 +183,12 @@ hold on
 %         'VerticalAlignment', 'bottom', 'FontSize', 12);
 % end
 
-% for y = 1:15
-%     % 使用line函数绘制横线
-%     line([0, 25], [y, y], 'Color', 'r');
-%     text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
-% end
+for y = 1:15
+    % 使用line函数绘制横线
+    line([0, 11], [y, y], 'Color', 'r');
+    text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+    text(6, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+end
 
 tmp = [9 8 7 6 7 5 7 9 8.5 6.5 8 8.5 7 7 7 7 7 7 7 9 9 6 5 7 7 6 6 4];
 % xdraw_range

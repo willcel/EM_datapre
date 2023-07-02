@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\新年工作\0628五棵松2\测线2-10倍';
+folder_path = 'D:\新年工作\0629五棵松\测线1';
 % ns = 17;
 % fs = 1e6;
 
@@ -19,7 +19,7 @@ for k = 1:ns
 
     for i = 1:numel(txt_files)
         i
-        if k==8 && i==52
+        if (k==5 && i==35) || (k==10 && i==30)
             continue
         end
         % 读取 CSV 文件

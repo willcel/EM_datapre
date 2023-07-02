@@ -34,7 +34,7 @@ for i =1:ns
     depFinal = [depFinal, firstIndex/100];
 end
 
-separateLayerDepth = [9 8 7 6 7 5 7 9 8.5 6.5 8 8.5 7 7 7 7 7 7 7 9 9 6 5 7 7 6 6 4];
+separateLayerDepth = [6 5 8 4 4 7 6 7 5 4 5 6 6 4 6]; %4*ones(1,ns);
 
 nolayer = 5;
 % ns=24;
@@ -46,7 +46,7 @@ for i = 1:ns
     d5 = 25;
     d4 = depFinal(i);
     d1 = stIndx(i);
-    d2 = d1 + 0.5;
+    d2 = d1 + 0.8;
     d3 = separateLayerDepth(i);
     thrbank(i,:) = [0 d1 d2 d3 d4 d5];
 
