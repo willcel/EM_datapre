@@ -1,14 +1,15 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\新年工作\0629五棵松\测线1';
+folder_path = 'D:\新年工作\0629五棵松\测线2';
+needExaminDetail = 1;
 % ns = 17;
 % fs = 1e6;
 
 
 data_avg_all = [];
 current_avg_all = [];
-for k = 1:ns
+for k = 7%1:ns
     k
     % 获取文件夹内所有的 txt 文件名
     txt_files = dir(fullfile(folder_path,['测点',num2str(k)],'save_time_data', '*.save_data_time.txt'));
@@ -19,7 +20,7 @@ for k = 1:ns
 
     for i = 1:numel(txt_files)
         i
-        if (k==5 && i==35) || (k==10 && i==30)
+        if k==2 && (i==11|| i==12)
             continue
         end
         % 读取 CSV 文件
@@ -80,7 +81,11 @@ for k = 1:ns
     
     data_avg_all = [data_avg_all; data_avg];
     current_avg_all = [current_avg_all; current_avg];
-
+    
+    if needExaminDetail && k == 7
+        data_offset = data_offset .* factor; 
+        save('data_all_ns7.mat', 'data_offset')
+    end
 end
 
 save('data_avg.mat','data_avg_all')

@@ -34,7 +34,7 @@ for i =1:ns
     depFinal = [depFinal, firstIndex/100];
 end
 
-separateLayerDepth = [6 5 8 4 4 7 6 7 5 4 5 6 6 4 6]; %4*ones(1,ns);
+separateLayerDepth = [5 5 5 7 9 3 7]; % 4*ones(1,ns); % % 
 
 nolayer = 5;
 % ns=24;
