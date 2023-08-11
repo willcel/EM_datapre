@@ -20,7 +20,7 @@ mat = mat_cdi;
 stIndx = [];
 for i =1:ns
     matRow = mat(i,:);
-    [row, col] = find(matRow < 2);
+    [row, col] = find(matRow < 10);
     firstIndex = col(1)-1;
     stIndx = [stIndx, firstIndex/100];
 end
@@ -34,7 +34,7 @@ for i =1:ns
     depFinal = [depFinal, firstIndex/100];
 end
 
-separateLayerDepth = [5 5 5 7 9 3 7]; % 4*ones(1,ns); % % 
+separateLayerDepth = 4*ones(1,ns);%[5 5 5 7 9 3 7]; % 4*ones(1,ns); % % 
 
 nolayer = 5;
 % ns=24;
@@ -149,7 +149,7 @@ end
 
 y = 0:0.01:total_depth-0.01;
 xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
-figure(Position=[737	342.333333333333	991.333333333333	650.666666666667])
+figure(Position=[137	142.333333333333	991.333333333333	650.666666666667])
 pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
 shading flat
 colormap jet

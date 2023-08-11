@@ -62,7 +62,7 @@ for k=1:ns
         data_receive_coil = data_avg_all(kk, :);
         current = current_avg_all(kk, :);
 
-        figure(Position=[1042.33333333333	451	1106.00000000000	643.333333333333])
+        figure(Position=[242.33333333333	251	1106.00000000000	643.333333333333])
         subplot(2,1,1)
 %         semilogy(time, data_receive_coil)
         plot(time, data_receive_coil, 'Color', [1 0.5 0], 'LineWidth',1.5)

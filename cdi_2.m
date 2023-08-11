@@ -57,8 +57,9 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = [13 20 20 29 27 45 25];
+    ntstop = 20*ones(1,ns);[13 20 20 29 27 45 25];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
+    ntstop(7) = 2;
 
     for i=1:ntstop(uu)%nt
         
@@ -150,7 +151,7 @@ y = 0:dy:total_depth-dy;
 
 xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
 % figure(Position=[1221	188.333333333333	1244	850.666666666667]) 
-figure(Position=[383.666666666667	189.666666666667	1646	800.666666666667]) 
+figure(Position=[83.666666666667	189.666666666667	1246	600.666666666667]) 
 
 %  get(gcf,'Position')
 

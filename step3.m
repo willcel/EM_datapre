@@ -68,7 +68,7 @@ for i=1:ns
     t1 = t*1000;
     
     % low pass filter 30kHz
-    sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir');
+    sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir','Steepness',0.95);
     sfx2 = sfx1(:,index:end);
     ind_neg = find(sfx2<0); 
     ind_paint = find(sfx2>0);
@@ -320,13 +320,14 @@ legend(legend_str1,'NumColumns',4)
 set(gca,'FontSize',24,'FontWeight','bold')
 %}
 
-signal_sample(2,[3 17]) = [3E-4 4E-6];
-signal_sample(7,[4 5 6 19 20 21 22 23 ]) = [1e-4 7e-5 4e-5 9e-6 8e-6 7e-6 6.5e-6 5.8e-6];
+% 个性化调整
+% signal_sample(2,[3 17]) = [3E-4 4E-6];
+% signal_sample(7,[4 5 6 19 20 21 22 23 ]) = [1e-4 7e-5 4e-5 9e-6 8e-6 7e-6 6.5e-6 5.8e-6];
 
 % {
 % 单挑线画图保存，取点
 k=1;
-for i= 7%1:ns%
+for i= 1:ns%
     figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
     
