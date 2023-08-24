@@ -31,8 +31,8 @@ time = time-start_point;  % 时间从0开始
 index = end_index+1;             % 必须大于end point % time(index) 彰显起始时刻
 
 
-pure_sec_field = (data_avg_all(:,index:end));
-% pure_sec_field = abs(data_avg_all(:,index:end));
+% pure_sec_field = (data_avg_all(:,index:end));
+pure_sec_field = abs(data_avg_all(:,index:end));
 
 ind_neg_final = size(data_avg_all, 2)-index+1;
 
@@ -282,8 +282,8 @@ for i=1:nt
     tmp = find(abs(tmp1)<10^(-6));
     
     if(i==1)
-        ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
-%         ind_time = [ind_time; tmp(1)];
+%         ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
+        ind_time = [ind_time; tmp(1)];
     else
         ind_time = [ind_time; tmp(1)];
     end

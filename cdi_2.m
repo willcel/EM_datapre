@@ -120,7 +120,7 @@ end
 
 
 %%
-nolayer = nt;         % ²ãÊý
+
 
 scale_factor = 100;
 
@@ -131,7 +131,7 @@ mat = 100.*ones(ns, total_depth*scale_factor);
 for x = 1:ns
     for y = 1:total_depth*scale_factor
         y1 = y/scale_factor;
-        for nn=1:nolayer
+        for nn=1:nt
             if(nn==1)
                 if(y1<=depth_(x, nn))
                     mat(x,y)=cdi_rho_(x,nn);
