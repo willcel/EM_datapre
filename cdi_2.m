@@ -57,9 +57,9 @@ for uu=1:ns
     mu0 = 4*pi*10^(-7);
     
 %     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = 20*ones(1,ns);[13 20 20 29 27 45 25];
+    ntstop = 56*ones(1,ns);[13 20 20 29 27 45 25];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
-    ntstop(7) = 2;
+%     ntstop(7) = 2;
 
     for i=1:ntstop(uu)%nt
         
@@ -89,7 +89,10 @@ for uu=1:ns
 
     c = 0.7;
     b2 = 0.4;
-
+%     if  
+% 
+%     end
+    
     delta1 = delta;
     delta1(1) = c*delta(1);
     
@@ -177,6 +180,7 @@ set(gca,'FontSize',18,'FontWeight','bold')
 % set(gca,'yticklabel',{'10','8','6','4','2'});
 set(gca,'ydir','reverse')
 hold on
+title('视电阻率成像')
 % for i = 1:ns
 % %     scatter(i-0.25,1,'^')
 %         text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...

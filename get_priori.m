@@ -95,12 +95,23 @@ dep_pro(dep_pro(:,nolayer-1)==0,nolayer-1) = total_depth-0.1; % 防止dep_pro1�
 % rho_pro = tmp_rho_pro;
 
 
-
+% rho_pro可能第一第二层为100
+for i=1:size(rho_pro,1)
+    for j = 1:4
+        if rho_pro(i,j)==100
+            tmp = rho_pro(i,1:4);
+            idx = find(tmp<100,1);
+            rho_pro(i,j) = tmp(idx);
+        end
+    end
+end
 
 %% 初始厚度都设置为5m试试
 % for k = 1:ns
 % dep_pro(k,:) = 3*(1:nolayer);
 % end
+
+
 
 scale_factor = 100;
 %%
@@ -125,6 +136,8 @@ for x = 1:ns
     end
 end
 
+
+%%
 
 y = 0:0.01:total_depth-0.01;
 xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];

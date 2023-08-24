@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\0629五棵松\测线4';
+folder_path = 'D:\willcel\data2024';
 needExaminDetail = 1;
 
 
@@ -18,7 +18,7 @@ for k = 1:ns
 
     for i = 1:numel(txt_files)
         i
-        if (k==5 && i==10) || (k==10 && i==38)
+        if (k==13 && (i==7 ||  i==8))
             continue
         end
         % 读取 CSV 文件
@@ -57,7 +57,7 @@ for k = 1:ns
             grid on
             xlim([0 5])
 %             ylim([0,3]*1e-4)
-            
+                
             subplot(2,1,2)
             plot(time*1000, current.*factor_current,'LineWidth',2.0)                
             xlim([0,5])

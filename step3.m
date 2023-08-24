@@ -31,20 +31,21 @@ time = time-start_point;  % 时间从0开始
 index = end_index+1;             % 必须大于end point % time(index) 彰显起始时刻
 
 
-pure_sec_field = abs(data_avg_all(:,index:end));
+pure_sec_field = (data_avg_all(:,index:end));
+% pure_sec_field = abs(data_avg_all(:,index:end));
 
 ind_neg_final = size(data_avg_all, 2)-index+1;
 
 filtered_sec_field = [];
 
 %{ 
-没有滤波的二次场信号
+%没有滤波的二次场信号
 
 
 t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
 t = t(1:ind_neg_final);
 t1 = t*1000;
-figure('Position',[1000	608.333333333333	931	729.666666666667])
+figure('Position',[10	68.333333333333	1331	729.666666666667])
 for i=1:ns
     loglog(t1, pure_sec_field(i,:))
     hold on
@@ -282,6 +283,7 @@ for i=1:nt
     
     if(i==1)
         ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
+%         ind_time = [ind_time; tmp(1)];
     else
         ind_time = [ind_time; tmp(1)];
     end
@@ -328,7 +330,7 @@ set(gca,'FontSize',24,'FontWeight','bold')
 % 单挑线画图保存，取点
 k=1;
 for i= 1:ns%
-    figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
+    figure(Position=[10.333333333333	14.333333333333	1208.66666666667	618])
     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
     
     hold on
@@ -343,13 +345,14 @@ for i= 1:ns%
     grid on
     legend(legend_str1,'NumColumns',4)
     set(gca,'FontSize',24,'FontWeight','bold')
+    ylim([1e-6 1e-1])
     savefolder = '.\rawVolt';
 
     if ~exist(savefolder, 'dir')
         mkdir(savefolder);
         disp(['Folder "', savefolder, '" created.']);
     end
-
+    
     savefileName = fullfile(savefolder, [legend_str1,'.tif']);
     saveas(gcf, savefileName)
     close all
@@ -361,7 +364,7 @@ end
 %%
 %{
 
-figure('Position', [200	200	2060	1028])
+figure('Position', [20	20	1260	628])
 for i=1:nt
     semilogy(delta_pset.*(pset-min(pset)), 1e3 * signal_sample(:,i))
     hold on
