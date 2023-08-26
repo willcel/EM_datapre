@@ -1,13 +1,13 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\测线2-亭子正对阴凉处';
+folder_path = 'D:\willcel\测线3-亭子正对阴凉处南北';
 needExaminDetail = 1;
 
 
 data_avg_all = [];
 current_avg_all = [];
-for k = 1%1:ns
+for k = 1:ns
     k
     % 获取文件夹内所有的 txt 文件名
     txt_files = dir(fullfile(folder_path,['测点',num2str(k)],'save_time_data', '*.save_data_time.txt'));
@@ -16,7 +16,7 @@ for k = 1%1:ns
     data_offset = [];
     current_offset = [];
 
-    for i = 10%1:numel(txt_files)
+    for i = 1:numel(txt_files)
         i
         if (k==13 && (i==7 ||  i==8))
 %             continue
