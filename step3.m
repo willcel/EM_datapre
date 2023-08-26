@@ -41,7 +41,6 @@ filtered_sec_field = [];
 %{ 
 %没有滤波的二次场信号
 
-
 t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
 t = t(1:ind_neg_final);
 t1 = t*1000;
@@ -57,7 +56,7 @@ ylabel('Voltage (V)')
 legend(legend_str1,'NumColumns',4)
 grid on
 set(gca,'FontSize',16,'FontWeight','bold')
-
+xlim([0 4])
 %}
 
 %%
@@ -282,8 +281,13 @@ for i=1:nt
     tmp = find(abs(tmp1)<10^(-6));
     
     if(i==1)
-%         ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
-        ind_time = [ind_time; tmp(1)];
+        if(isempty(tmp))
+            ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
+        else
+            ind_time = [ind_time; tmp(1)];
+        end
+        
+%         
     else
         ind_time = [ind_time; tmp(1)];
     end
@@ -345,7 +349,7 @@ for i= 1:ns%
     grid on
     legend(legend_str1,'NumColumns',4)
     set(gca,'FontSize',24,'FontWeight','bold')
-    ylim([1e-6 1e-1])
+%     ylim([1e-6 1e-1])
     savefolder = '.\rawVolt';
 
     if ~exist(savefolder, 'dir')

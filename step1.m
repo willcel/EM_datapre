@@ -1,13 +1,13 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\测线3-亭子正对阴凉处南北';
+folder_path = 'D:\willcel\测线3-重测';
 needExaminDetail = 1;
 
 
 data_avg_all = [];
 current_avg_all = [];
-for k = 1:ns
+for k = 20:ns
     k
     % 获取文件夹内所有的 txt 文件名
     txt_files = dir(fullfile(folder_path,['测点',num2str(k)],'save_time_data', '*.save_data_time.txt'));
@@ -16,7 +16,7 @@ for k = 1:ns
     data_offset = [];
     current_offset = [];
 
-    for i = 1:numel(txt_files)
+    for i = 10:numel(txt_files)
         i
         if (k==13 && (i==7 ||  i==8))
 %             continue
@@ -43,7 +43,7 @@ for k = 1:ns
         signal = datanew(:,2)-offset;
         % current = datanew(:,2);
         % signal = datanew(:,3);
-        is_plot = 0;
+        is_plot = 1;
         if(is_plot)
             dt = 1/fs;
             time = (1:length(datanew(:,2))).*dt;
@@ -56,6 +56,7 @@ for k = 1:ns
             ylabel('voltage (V)')
             grid on
             xlim([0 5])
+            title(['cedian',num2str(k)])
 %             ylim([0,3]*1e-4)
                 
             subplot(2,1,2)
@@ -65,6 +66,8 @@ for k = 1:ns
             ylabel('current (A)')
             grid on
             set(gca,'FontName','Calibri','FontSize',12,'FontWeight','bold')
+
+
         end
 %             data_array = [data_array; file_data];
         data_offset = [data_offset; signal'];
