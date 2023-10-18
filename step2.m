@@ -28,41 +28,37 @@ for k=1:ns
     data_receive_coil = data_avg_all(k, :);
     current = current_avg_all(k, :);
     
-    % peak point
-    [max_val, ind] = max(current);
-     index_peak = min(find(abs(current-max_val)<0.1));
-    
-    % end point
-    ind1 = find(current<0);
-    set2 = ind:length(current);
-    point2 = min(intersect(set2, ind1));
-    
-%     if(k==4 || k==5 ||  k ==6 || k==8 || k==9 || k==17)
-%         point2 = 2128;
-%     end
-    
-    
-    % 衰减起始点
-    diff_current = diff(current);
-    ind2 = find(diff_current<-4);
-    point3 = min(intersect(set2, ind2));
-    
-    
-    % start point
-    set1 = 1:ind;   % 电流到达峰值的前半段
-    ind11 = find(diff_current>1.5);
-    point1 = min(intersect(set1,ind11));
-    if k == 17
-        1;
-    end
+%     % peak point
+%     [max_val, ind] = max(current);
+%      index_peak = min(find(abs(current-max_val)<0.1));
+%     
+%     % end point
+    ind1 = find(current<0,1);
+    point2 =ind1;
+%     
+%     
+%     % 衰减起始点
+%     diff_current = diff(current);
+%     ind2 = find(diff_current<-4);
+%     point3 = min(intersect(set2, ind2));
+%     
+%     
+%     % start point
+%     set1 = 1:ind;   % 电流到达峰值的前半段
+%     ind11 = find(diff_current>1.5);
+%     point1 = min(intersect(set1,ind11));
 
-    if(0)
+    point1 = 149 - 148;
+    index_peak = 176 - 148;
+    point3 = 927 - 148;
+    
+    if(k==3)
 
-        kk = 1;
+        kk = k;
         data_receive_coil = data_avg_all(kk, :);
         current = current_avg_all(kk, :);
 
-        figure(Position=[242.33333333333	251	1106.00000000000	643.333333333333])
+        figure(Position=[242.33333333333	151	1106.00000000000	643.333333333333])
         subplot(2,1,1)
 %         semilogy(time, data_receive_coil)
         plot(time, data_receive_coil, 'Color', [1 0.5 0], 'LineWidth',1.5)
@@ -95,8 +91,26 @@ for k=1:ns
         grid on
         set(gca,'FontSize',16,'FontWeight','bold')
         text(-0.1,1.05,'(b)','Units','normalized','FontSize',22)
-
         
+        %%
+        figure
+        sig1 = data_receive_coil;
+       
+        sig2 = -1*ones(1, length(sig1));
+        idx = find(sig1 < 0);
+        sig2(idx) = - sig1(idx);
+
+        semilogy(time, sig1)
+        hold on
+        semilogy(time, sig2, '-r')
+        legend('正值', '负值')
+                xlabel('time(s)')
+        ylabel('voltage (V)')
+                title(['测点',num2str(kk)])
+        grid on
+        set(gca,'FontSize',16,'FontWeight','bold')
+        xlim([0.0,0.03])
+        1;
     end
     
     

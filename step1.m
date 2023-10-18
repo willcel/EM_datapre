@@ -1,52 +1,44 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\测线3-重测';
+folder_path = 'D:\willcel\10-13汤山测试\测线1-单点采集';
 needExaminDetail = 1;
 
 
 data_avg_all = [];
 current_avg_all = [];
-for k = 20:ns
+for k = 1:ns
     k
     % 获取文件夹内所有的 txt 文件名
-    txt_files = dir(fullfile(folder_path,['测点',num2str(k)],'save_time_data', '*.save_data_time.txt'));
-    
+    volt_files = dir(fullfile(folder_path,['测点',num2str(k)], '192.168.2.80_0_*.txt'));
+    curr_files = dir(fullfile(folder_path,['测点',num2str(k)], '192.168.2.80_1_*.txt'));
+
     % 对每个 CSV 文件进行处理
     data_offset = [];
     current_offset = [];
 
-    for i = 10:numel(txt_files)
+    for i = 1:numel(txt_files)
         i
-        if (k==13 && (i==7 ||  i==8))
-%             continue
+        if ( (k==1 && i==1) || (k==3 && i==5) ||  (k==6 && i==3))
+            continue
         end
-        % 读取 CSV 文件
-        % filename = fullfile(folder_path, ['测点',num2str(k)],txt_files(i).name)
-        % 需要严格选前20次
-        filename = fullfile(folder_path, ['测点',num2str(k)],'save_time_data',[num2str(i),'.save_data_time.txt']);
-
-        [A,B,C] = textread(filename,'%s %s %s', 'headerlines', 1);   % 读取十六进制数据
-        
-        datanew = zeros(length(B), 3);
-        
-        % datanew(:,1)=hex2decWithSign(A, 8)/2^23;  % 24位AD
-        datanew(:,2)=hex2decWithSign(B, 8)/2^23;
-        datanew(:,3)=hex2decWithSign(C, 8)/2^23;
+        % 读取文件     
+        volt = read2(volt_files, i);
+        curr = read2(curr_files, i);
 
         % 如果文件非空
-        offset = mean(datanew(20000:end,2));                % 接收线圈的偏置
-        offset_current = mean(datanew(20000:end,3));    % 发射电流的偏置
+        offset = mean(volt(10000:end));                % 接收线圈的偏置
+        offset_current = mean(curr(10000:end));    % 发射电流的偏置
         
         % 减掉偏置            
-        current = datanew(:,3)-offset_current;
-        signal = datanew(:,2)-offset;
+        current = curr-offset_current;
+        signal = volt-offset;
         % current = datanew(:,2);
         % signal = datanew(:,3);
-        is_plot = 1;
-        if(is_plot)
+        
+        if(1)
             dt = 1/fs;
-            time = (1:length(datanew(:,2))).*dt;
+            time = (1:length(signal)).*dt;
             
             figure
             subplot(2,1,1)
@@ -66,6 +58,12 @@ for k = 20:ns
             ylabel('current (A)')
             grid on
             set(gca,'FontName','Calibri','FontSize',12,'FontWeight','bold')
+            
+            name1 = ['ns',num2str(k),'_measure',num2str(i)];
+            svfig(name1)
+            close all
+
+            % find(time > 0.58e-3, 1) = 149
 
 
         end
@@ -84,12 +82,14 @@ for k = 20:ns
     current_avg_all = [current_avg_all; current_avg];
     
     if needExaminDetail && k == 7
-        data_offset = data_offset .* factor; 
-        save('data_all_ns7.mat', 'data_offset')
+%         data_offset = data_offset .* factor; 
+%         save('data_all_ns7.mat', 'data_offset')
     end
 end
 
 save('data_avg.mat','data_avg_all')
 % current_avg_all = -current_avg_all; % 不知为什么，工程解决
 save('current_avg.mat','current_avg_all')
+
+
 

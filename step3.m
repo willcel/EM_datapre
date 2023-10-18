@@ -40,23 +40,23 @@ filtered_sec_field = [];
 
 %{ 
 %没有滤波的二次场信号
-
+close all
 t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
 t = t(1:ind_neg_final);
 t1 = t*1000;
 figure('Position',[10	68.333333333333	1331	729.666666666667])
-for i=1:ns
+for i=1:1
     loglog(t1, pure_sec_field(i,:))
     hold on
-    legend_str1{i} = ['测点',num2str(i)];
+%     legend_str1{i} = ['测点',num2str(i)];
 end
 xlim([0,20])
 xlabel('time (ms)')
 ylabel('Voltage (V)')
-legend(legend_str1,'NumColumns',4)
+% legend(legend_str1,'NumColumns',4)
 grid on
 set(gca,'FontSize',16,'FontWeight','bold')
-xlim([0 4])
+xlim([0 10])
 %}
 
 %%
@@ -87,164 +87,38 @@ for i=1:ns
     
 
 %     sizeNum = [50	100	100	200	200	400	400	800	800	800	1000    ];
-    sizeNum = [50	100	200	300	300	600	600	1000	1000 1000	1000  ];
-%     if(ismember(i,[2 6 ]))
-%         sizeNum = [50	100	200	300	1000	1000	1000	1000	1000 1000	1000 ];
-%     elseif(ismember(i,[8 9]))
-%         sizeNum = [50	100	200	300	1000	2000	2000	2000	2000 1000	1000 ];
-%     elseif(ismember(i,[11]))
-%         sizeNum = [50	100	200	300	1000	1500	1000	1000	1000 1000	1000 ];
-%     elseif(ismember(i,[12]))
-%         sizeNum = [50	100	200	300	1000	2000	3000	1000	1000 1000	1000 ];
-%     elseif(ismember(i,[20]))
-%         sizeNum = [50	100	800	1000	1000	2000	3000	1000	1000 1000	1000 ];
-%     end
 %     sizeNum = 5*ones(1,17);
     j=1;
-    %% 2.3ms
-    windowSize = sizeNum(j); j=j+1;
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
+    
+    % 时间段分割点
+    timeline = [0.5  1   2   3   4   5   6   9       12   15     20   ] + t_st * 1e3;
+    sizeNum = [50	80	100	150	200	300	300	500	    1000 1000	1000  ]; % 每个时间段对应的窗口宽度
+    
+    for j = 1:length(timeline)
+        windowSize = sizeNum(j);
+        b = (1/windowSize)*ones(1,windowSize); a = 1;
      
-    filter_index =find(abs(t-2.3*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, pure_sec_field(i,1:150), y(151:filter_index-1)];
-    
-    %% 3ms
-    windowSize = sizeNum(j); j=j+1;
-    
-    % if(i==4 || i==9 || i==16)
-    %      windowSize = sizeNum(j); j=j+1;;
-    % end
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index1 =find(abs(t-3*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index:filter_index1-1)];
-    
-    %% 3.5ms
-    
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index2 =find(abs(t-3.5*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index1:filter_index2-1)];
-    
-    
-    %% 4ms
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index3 =find(abs(t-4*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index2:filter_index3-1)];
-    
-    %% 4.5ms
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index4 =find(abs(t-4.5*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index3:filter_index4-1)];
-    
-    %% 5ms -para 6
-    windowSize = sizeNum(j); j=j+1;
-    
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index5 =find(abs(t-5*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index4:filter_index5-1)];
-    
-    %% 6.5ms
-    
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index6 =find(abs(t-6.5*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index5:filter_index6-1)];
-    
-    
-    %% 8.5ms
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index7 =find(abs(t-8.5*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index6:filter_index7-1)];
-    
-    %% 12ms
-    windowSize = sizeNum(j); j=j+1;
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index8 =find(abs(t-12*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index7:filter_index8-1)];
-    
-    %% 16ms
-    windowSize = sizeNum(j); j=j+1;
-
-%     if(i==4 || i==3 || i==14 || i==11)
-% %          windowSize = sizeNum(j); j=j+1;;
-%     end
-
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    filter_index9 =find(abs(t-16*10^(-3))<5*10^(-7));
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index8:filter_index9-1)];
-    
-    %% 20ms
-    
-    windowSize = sizeNum(j); j=j+1;
-    
-    %  if(i==4 || i==3 || i==14 || i==11)
-    %      windowSize = sizeNum(j); j=j+1;;
-    %  end
-
-    
-    b = (1/windowSize)*ones(1,windowSize);
-    a = 1;
-    
-    y = filter(b,a,sfx(:)');
-    
-    filter_signal = [filter_signal, y(filter_index9:end)];
+        filter_index =find(t*1e3 > timeline(j), 1);
+        y = filter(b,a,sfx(:)');
+        
+        switch j
+            case 1
+                filter_signal = [filter_signal, pure_sec_field(i,1:150), y(151:filter_index-1)];
+            case length(timeline)
+                filter_signal = [filter_signal, y(lastidx:end)];
+            otherwise
+                filter_signal = [filter_signal, y(lastidx:filter_index-1)];
+        end
+        lastidx = filter_index;
+    end
     
     
     %%
     %{ 
       % 滤波前后对比
-
+        k=10;
         figure('Position',[511	255.666666666667	700	503.333333333333])
-        loglog(t1, pure_sec_field(i,:))
+        loglog(t1, pure_sec_field(k,:))
         hold on
         loglog(t1, sfx)
     %     xlim([0,20])
@@ -255,7 +129,7 @@ for i=1:ns
         grid on
         legend('Input Data','30kHz Low pass filter','Average filter')
         xlim([0,20])
-        title(['measurement point ',num2str(i)])
+        title(['measurement point ',num2str(k)])
         set(gca,'FontName','Calibri','FontSize',16,'FontWeight','bold')
 
     %}
@@ -278,58 +152,31 @@ for i=1:nt
     
     tmp1 = t-time_log(i);
     
-    tmp = find(abs(tmp1)<10^(-6));
+    tmp = find(tmp1>0, 1);
+
+%     tmp2 = find(abs(tmp1) < 1e-6);
+%     tmp = tmp2(1);
     
     if(i==1)
         if(isempty(tmp))
             ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
         else
-            ind_time = [ind_time; tmp(1)];
+            ind_time = [ind_time; tmp];
         end
         
 %         
     else
-        ind_time = [ind_time; tmp(1)];
+        ind_time = [ind_time; tmp];
     end
 end
 
 time_sample = t(ind_time);
 signal_sample = filtered_sec_field(:,ind_time);
 
-% signal_sample(5,:) = signal_sample(2,:);
-% signal_sample(6,:) = signal_sample(1,:);
-% signal_sample(21,:) = signal_sample(2,:);
-% signal_sample(22,:) = signal_sample(2,:);
-% signal_sample(23,:) = signal_sample(2,:);
 %%
-%{
-figure(Position=[410.333333333333	174.333333333333	1808.66666666667	1118])
-k=1;
-for i= 1:ns%
-    
-    loglog(time_sample*1000, signal_sample(i,:))%,'-*')
-    
-    hold on
-    xlabel('time (ms)')
-    ylabel('voltage (V)')
-    legend_str1{k} = ['测点',num2str(i)];k=k+1;
-%     for j = 1:nt
-%         text(time_sample(j)*1000, signal_sample(i,j), num2str(j), ...
-%         'HorizontalAlignment', 'center', ...
-%         'VerticalAlignment', 'bottom', 'FontSize', 6);
-%     end
-end
-grid on
-% legend('1','2','3')
-% legend('5','6','7','8','9')
-legend(legend_str1,'NumColumns',4)
-set(gca,'FontSize',24,'FontWeight','bold')
-%}
-
-% 个性化调整
-% signal_sample(2,[3 17]) = [3E-4 4E-6];
-% signal_sample(7,[4 5 6 19 20 21 22 23 ]) = [1e-4 7e-5 4e-5 9e-6 8e-6 7e-6 6.5e-6 5.8e-6];
-
+figure
+loglog(t, filtered_sec_field(10,1:length(t)))
+%%
 % {
 % 单挑线画图保存，取点
 k=1;
