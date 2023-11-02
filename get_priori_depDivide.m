@@ -34,7 +34,7 @@ for i =1:ns
     depFinal = [depFinal, firstIndex/100];
 end
 
-separateLayerDepth = 4*ones(1,ns);%[5 5 5 7 9 3 7]; % 4*ones(1,ns); % % 
+separateLayerDepth = 13*ones(1,ns);%[5 5 5 7 9 3 7]; % 4*ones(1,ns); % % 
 
 nolayer = 5;
 % ns=24;
@@ -43,16 +43,18 @@ rho_pro = zeros(ns, nolayer);
 dep_pro = zeros(ns, nolayer);
 thrbank = ones(ns, nolayer+1);
 for i = 1:ns
-    d5 = 25;
+    d5 = total_depth;
     d4 = depFinal(i);
-    d1 = stIndx(i);
-    d2 = d1 + 0.8;
+    d1 = 3.8;stIndx(i);
+    d2 = 5.4;d1 + 0.8;
     d3 = separateLayerDepth(i);
-    thrbank(i,:) = [0 d1 d2 d3 d4 d5];
+    
 
-    if ismember(i,[3,6,7])
-%         thrbank(i,:) = [];
+%     if ismember(i,[1 2 3 6 7 10])
+    if ismember(i,[ 2 3 6 7 10])
+%        d1 = 3.5; d2 = 5.5; d3 = 13;
     end
+    thrbank(i,:) = [0 d1 d2 d3 d4 d5];
 end
 
 

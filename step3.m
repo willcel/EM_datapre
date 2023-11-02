@@ -31,8 +31,8 @@ time = time-start_point;  % 时间从0开始
 index = end_index+1;             % 必须大于end point % time(index) 彰显起始时刻
 
 
-% pure_sec_field = (data_avg_all(:,index:end));
-pure_sec_field = abs(data_avg_all(:,index:end));
+pure_sec_field = (data_avg_all(:,index:end));
+% pure_sec_field = abs(data_avg_all(:,index:end));
 
 ind_neg_final = size(data_avg_all, 2)-index+1;
 
@@ -70,6 +70,7 @@ for i=1:ns
     % low pass filter 30kHz
     sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir','Steepness',0.95);
     sfx2 = sfx1(:,index:end);
+    sfx3(i,:) = sfx2;
     ind_neg = find(sfx2<0); 
     ind_paint = find(sfx2>0);
 %     figure
@@ -79,7 +80,7 @@ for i=1:ns
 %     semilogy(ind_neg, -sfx2(ind_neg),'.')
 %     grid on
 
-    sfx = abs(sfx2);
+    sfx = (sfx2);
 %     sfx = sfx2;
 
 %     index_sfx = find(sfx<10^(-7));
@@ -91,7 +92,7 @@ for i=1:ns
     j=1;
     
     % 时间段分割点
-    timeline = [0.5  1   2   3   4   5   6   9       12   15     20   ] + t_st * 1e3;
+    timeline = t_st * 1e3 + [1  1.5   2   3   4   5   6   9       12   15     20   ];
     sizeNum = [50	80	100	150	200	300	300	500	    1000 1000	1000  ]; % 每个时间段对应的窗口宽度
     
     for j = 1:length(timeline)
@@ -174,36 +175,50 @@ time_sample = t(ind_time);
 signal_sample = filtered_sec_field(:,ind_time);
 
 %%
-figure
-loglog(t, filtered_sec_field(10,1:length(t)))
+
 %%
 % {
 % 单挑线画图保存，取点
 k=1;
 for i= 1:ns%
+    %%
+%     figure
+%     loglog(t, sfx3(i,1:length(t)))
+%     hold on
+%     loglog(t, -sfx3(i,1:length(t)), '-r')
+%     adjFig_1026(i)
+
+    %%
+%     figure
+%     loglog(t, filtered_sec_field(i,1:length(t)))
+%     hold on
+%     loglog(t, -filtered_sec_field(i,1:length(t)), '-r')
+%     adjFig_1026(i)
+%     legend_str1 = ['抽道前测点',num2str(i)];
+%     savefileName = fullfile(savefolder, [legend_str1,'.tif']);
+%     saveas(gcf, savefileName)
+
+    %%
     figure(Position=[10.333333333333	14.333333333333	1208.66666666667	618])
-    loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
-    
+    loglog(time_sample*1000, signal_sample(i,:),'-o', 'LineWidth',1.0)
     hold on
-    xlabel('time (ms)')
-    ylabel('voltage (V)')
-    legend_str1 = ['测点',num2str(i)];
+    loglog(time_sample*1000, -signal_sample(i,:),'-ro', 'LineWidth',1.0)
+    
+    adjFig_1026(i); set(gca,'FontSize',24,'FontWeight','bold')
     for j = 1:nt
-        text(time_sample(j)*1000, signal_sample(i,j), num2str(j), ...
+        text(time_sample(j)*1000, abs(signal_sample(i,j)), num2str(j), ...
         'HorizontalAlignment', 'center', ...
         'VerticalAlignment', 'bottom', 'FontSize', 10);
     end
-    grid on
-    legend(legend_str1,'NumColumns',4)
-    set(gca,'FontSize',24,'FontWeight','bold')
-%     ylim([1e-6 1e-1])
+    
+    ylim([0.8e-5 0.5e-0])
     savefolder = '.\rawVolt';
-
+    
     if ~exist(savefolder, 'dir')
         mkdir(savefolder);
         disp(['Folder "', savefolder, '" created.']);
     end
-    
+    legend_str1 = ['测点',num2str(i)];
     savefileName = fullfile(savefolder, [legend_str1,'.tif']);
     saveas(gcf, savefileName)
     close all
@@ -260,3 +275,8 @@ xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 %%
 save('signal_sample.mat','signal_sample')
 step4_write_txt
+
+function adjFig_1026(i)
+    xlabel('time (s)');    ylabel('voltage (V)');    legend_str1 = ['测点',num2str(i)];
+    grid on;legend(legend_str1,'NumColumns',4) ; set(gca,'FontSize',14,'FontWeight','bold')
+end

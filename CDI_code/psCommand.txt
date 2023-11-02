@@ -1,2 +1,2 @@
 start ubuntu
-cd /mnt/d/0628五棵松相关/测线2-0629/EM_datapre/CDI_code && gfortran -o runfile main.f90 && ./runfile
+cd /mnt/d/0628五棵松相关/测线2-0629/EM_datapre/CDI_code && gfortran -o runfile mainfly_cdi.f90 && ./runfile

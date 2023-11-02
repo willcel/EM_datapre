@@ -1,7 +1,7 @@
 %%
 clc
 clear
-close all
+% close all
 dbstop if error
 %% ---------------------- 参数设置 ----------------------------------
 addpath("D:\willcel\subfunc_mat")
@@ -27,8 +27,8 @@ fs = 256e3;  % 1.25*10^6;
 
 
 %% 数据采样
-nt = 56;                        % 抽道时间
-t_st = 3.7e-3; %            % 起始时间        
+nt = 56;56;                        % 抽道时间
+t_st = 3.1e-3; %            % 起始时间        
 t_ed = 20e-3;       % 结束时间 
 
 
@@ -39,7 +39,7 @@ nolayer = 5;
 %% 发射参数
 hr = 0.63;   % 接收线圈的高度
 
-rt = 0.5;                 % 发射线圈的半径 m
+rt = 0.5;               % 发射线圈的半径 m
 nturn = 3;              % 线圈的匝数
 
 rr = 0.25;               % 接收线圈的半径 m
@@ -50,7 +50,7 @@ xr = 0.59;    % 中心距
 %%
 
 % 要设 t_ed
-step3                          % 滤波
+% step3                          % 滤波
 % step4_write_txt                  % 将原始数据写入文件
 
 % { 
@@ -66,19 +66,5 @@ copyfile('point3set.txt', path_cdi)
 copyfile('point4set.txt', path_cdi)
 copyfile('parameter_in.txt', path_cdi)
 %}
-%{
 % -------------------- 视电阻率成像 -------------------------------
-delete([path_cdi,'flag.dat'])
-winopen([path_cdi,'CDI_code.exe'])
-% 
-while 1
-    pause(1);
-    
-    if(exist([path_cdi,'flag.dat'],'file'))
-        a = load([path_cdi,'flag.dat']);
-        if (size(a,1) == 1)
-            break
-        end
-    end
-end
-%}
+

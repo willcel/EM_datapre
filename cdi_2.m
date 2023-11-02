@@ -6,6 +6,9 @@ t0 = point4set(1)-point1set(1);
 % t0 = 0.002;
 % t0 = t_st;
 
+% ns = 2;
+ns=14;
+
 load('signal_sample.mat')
 
 path_cdi = '.\CDI_code';
@@ -23,26 +26,25 @@ for i=1:nt
     t(i)=10^tlog(i);
 end
 
-obs_original = load([path_cdi,'\log1.dat']);
+obs_original = load([path_cdi,'\log0.9.dat']);
 rho = load([path_cdi,'\rho1.dat']);
 
-is_plot = 0;
+is_plot = 1;
 for uu=1:ns
 %     uu = 17 ;%
     a = signal_sample(uu,:);
     
-    if uu==6
-        1;
-%         is_plot = 1;
-    end
+
     obs = obs_original;
     
     
     if(is_plot==1)
         figure%(Position=[200 200 200 200])
         for i=1:1:nt
+%             semilogx(rho,obs(:,i),'LineWidth',0.5)
             loglog(rho,obs(:,i),'LineWidth',0.5)
             hold on
+            loglog(rho,-obs(:,i),'LineWidth',0.5)
         end
         xlabel('\rho \Omega/m')
         ylabel('voltage (V)')
@@ -56,8 +58,8 @@ for uu=1:ns
     cdi_rho = zeros(1,nt);
     mu0 = 4*pi*10^(-7);
     
-%     ntstop = [19 16 20 25 39 40 43 34 27 22 24 20 23 25 35 28 30];
-    ntstop = 56*ones(1,ns);[13 20 20 29 27 45 25];
+    ntstop = [56 56 56 33 36 24 23 22 22 22 22 21 21 19];
+%     ntstop = 56*ones(1,ns);;
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
 %     ntstop(7) = 2;
 
@@ -72,17 +74,27 @@ for uu=1:ns
                 index = j;
             end
         end
-        
-        if(rho(index)>100)
-            cdi_rho(i) = 100;
-        else
+
+
+
+%         if(rho(index)>100)
+%             cdi_rho(i) = 100;
+%         else
             cdi_rho(i) = rho(index);
+%         end
+
+        if uu==1
+            1;
+            if(i==1)
+%                 cdi_rho(i) = 0.324;
+            end
         end
-        
+
         delta(i) = (2*(t(i)-t0)*cdi_rho(i)/mu0)^0.5;  % 这里减去的是关断的时间
         
+
         if(is_plot==1)
-            scatter(cdi_rho(i),a(i),'^')
+            scatter(cdi_rho(i),abs(a(i)),'^')
         end
     end
     
@@ -113,6 +125,8 @@ for uu=1:ns
     
     depth_ = [depth_; delta1];
     cdi_rho_ = [cdi_rho_; cdi_rho];
+    svfig(num2str(uu))
+    close all
 end
 
 % avoid incorrect cdi_rho_ value. Due to incorrect voltage.
@@ -153,6 +167,8 @@ y = 0:dy:total_depth-dy;
 
 
 xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
+
+mat(:,end) = 100;
 % figure(Position=[1221	188.333333333333	1244	850.666666666667]) 
 figure(Position=[83.666666666667	189.666666666667	1246	600.666666666667]) 
 
@@ -188,12 +204,12 @@ title('视电阻率成像')
 %         'VerticalAlignment', 'bottom', 'FontSize', 12);
 % end
 
-for y = 1:15
-    % 使用line函数绘制横线
-    line([0, 11], [y, y], 'Color', 'r');
-    text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
-    text(6, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
-end
+% for y = 1:15
+%     % 使用line函数绘制横线
+%     line([0, 11], [y, y], 'Color', 'r');
+%     text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+%     text(6, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+% end
 
 tmp = [9 8 7 6 7 5 7 9 8.5 6.5 8 8.5 7 7 7 7 7 7 7 9 9 6 5 7 7 6 6 4];
 % xdraw_range
