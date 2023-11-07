@@ -1,7 +1,7 @@
 
 load('point1set.txt')
 load('point4set.txt')
-close all
+% close all
 t0 = point4set(1)-point1set(1);
 % t0 = 0.002;
 % t0 = t_st;
@@ -60,7 +60,7 @@ for uu=1:ns
     ntstop = 56*ones(1,ns);[13 20 20 29 27 45 25];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
 %     ntstop(7) = 2;
-
+%     index = 1;
     for i=1:ntstop(uu)%nt
         
         minerr = 1000;
@@ -82,13 +82,19 @@ for uu=1:ns
         delta(i) = (2*(t(i)-t0)*cdi_rho(i)/mu0)^0.5;  % 这里减去的是关断的时间
         
         if(is_plot==1)
-            scatter(cdi_rho(i),a(i),'^')
+            scatter(cdi_rho(i),a(i),'^')  
         end
     end
     
 
-    c = 0.7;
-    b2 = 0.4;
+%     c = 0.7; b2 = 0.4;
+    c = 5; b2 = 0.6;
+%     if ismember(uu,[34:38])
+%         c = 5; b2 = 0.6;
+%     else
+%         c = 6; b2 = 0.3;
+%     end
+
 %     if  
 % 
 %     end
@@ -110,7 +116,7 @@ for uu=1:ns
         delta1(i) = delta1(i-1)+abs(b*tmp);
     end
     
-    
+    close all
     depth_ = [depth_; delta1];
     cdi_rho_ = [cdi_rho_; cdi_rho];
 end
@@ -181,19 +187,20 @@ set(gca,'FontSize',18,'FontWeight','bold')
 set(gca,'ydir','reverse')
 hold on
 title('视电阻率成像')
-% for i = 1:ns
-% %     scatter(i-0.25,1,'^')
+svfig('CDI成像', './rawVolt')
+for i = 1:ns
+%     scatter(i-0.25,1,'^')
 %         text(xdraw_range(i)-delta_pset*0.5, 3, num2str(i), ...
 %         'HorizontalAlignment', 'center', ...
 %         'VerticalAlignment', 'bottom', 'FontSize', 12);
-% end
-
-for y = 1:15
-    % 使用line函数绘制横线
-    line([0, 11], [y, y], 'Color', 'r');
-    text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
-    text(6, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
 end
+
+% for y = 1:15
+%     % 使用line函数绘制横线
+%     line([0, 11], [y, y], 'Color', 'r');
+%     text(1, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+%     text(6, y, num2str(y), 'VerticalAlignment', 'middle', 'HorizontalAlignment', 'left');
+% end
 
 tmp = [9 8 7 6 7 5 7 9 8.5 6.5 8 8.5 7 7 7 7 7 7 7 9 9 6 5 7 7 6 6 4];
 % xdraw_range

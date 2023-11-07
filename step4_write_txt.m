@@ -16,7 +16,6 @@ for i=1:nt
 end
 
 
-
 %%
 % figure
 % id = 0;
@@ -56,6 +55,6 @@ for uu=1:ns
     end
 end
 
-namestep4 = sprintf('vobs_%.0fms.txt',t_ed*1e3);
+namestep4 = sprintf('vobs_%.0fms.txt',20); %t_ed*1e3);
 save(namestep4,'vobs','-ascii')
 

@@ -1,14 +1,14 @@
 %%
 clc
 clear
-close all
+% close all
 dbstop if error
 %% ---------------------- 参数设置 ----------------------------------
 addpath("D:\willcel\subfunc_mat")
 
 %% 数据预处理的参数
 % 0.5+(1:11)*0.5
-pset = [1:14];  % 测点的坐标，文件夹的名称
+pset = [1:13];  % 测点的坐标，文件夹的名称
 delta_pset = 1;            % 测点之间的距离 （m）
 
 ns = length(pset);                  % 测点的个数
@@ -21,16 +21,13 @@ factor_current = 1*100;              % 电流的放大倍数
 fs = 256e3;  % 1.25*10^6;
 
 %% ------------------- 数据预处理 ----------------------------------
-% step1    % 数据去直流偏置, 叠加求平均
-% step2_pre % 零点操作
-% step2     % 存储电流的转折点
 
+% step1    % 数据去直流偏置, 叠加求平均
 
 %% 数据采样
 nt = 56;                        % 抽道时间
-t_st = 3.7e-3; %            % 起始时间        
+t_st = 3.045e-3; %            % 起始时间        
 t_ed = 20e-3;       % 结束时间 
-
 
 %% 反演参数
 total_depth = 40;           % 最大深度 m
@@ -43,7 +40,7 @@ rt = 0.5;                 % 发射线圈的半径 m
 nturn = 3;              % 线圈的匝数
 
 rr = 0.25;               % 接收线圈的半径 m
-nturn1 = 120;          % 接收线圈的匝数
+nturn1 = 20;          % 接收线圈的匝数
 
 xr = 0.59;    % 中心距
 
@@ -66,19 +63,15 @@ copyfile('point3set.txt', path_cdi)
 copyfile('point4set.txt', path_cdi)
 copyfile('parameter_in.txt', path_cdi)
 %}
-%{
+
 % -------------------- 视电阻率成像 -------------------------------
-delete([path_cdi,'flag.dat'])
-winopen([path_cdi,'CDI_code.exe'])
-% 
-while 1
-    pause(1);
-    
-    if(exist([path_cdi,'flag.dat'],'file'))
-        a = load([path_cdi,'flag.dat']);
-        if (size(a,1) == 1)
-            break
-        end
-    end
-end
-%}
+%%
+
+cdi_2
+
+%%
+
+get_priori
+% get_priori_depDivide
+
+

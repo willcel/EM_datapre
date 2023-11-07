@@ -24,7 +24,7 @@ rho_pro = zeros(ns, nolayer);
 dep_pro = zeros(ns, nolayer);
 thrbank = ones(ns, nolayer+1);
 for i = 1:ns
-    thrbank(i,:) = [99	1	0.1 1e-2 1e-96  1e-97 ];
+    thrbank(i,:) = [99	2	0.1 1e-2 1e-96  1e-97 ];
 %     thrbank(i,:) = [99	1	0.05	3e-3 1e-96  1e-97 ];
     % thrbank(2,:) = [10	1	0.1	0.01	0.001 1e-6];
     % 个性化定制
@@ -111,7 +111,7 @@ end
 % dep_pro(k,:) = 3*(1:nolayer);
 % end
 
-
+dep_pro(:,1) = dep_pro(:,2) / 2;
 
 scale_factor = 100;
 %%
