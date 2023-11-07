@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\11.6汤山\测线1';
+folder_path = 'D:\willcel\11.6汤山\测线5';
 needExaminDetail = 1;
 
 data_avg_all = [];
