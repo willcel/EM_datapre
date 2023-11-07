@@ -39,28 +39,6 @@ ind_neg_final = size(data_avg_all, 2)-index+1;
 filtered_sec_field = [];
 
 %%
-%{ 
-%没有滤波的二次场信号
-close all
-t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
-t = t(1:ind_neg_final);
-t1 = t*1000;
-figure('Position',[10	68.333333333333	1331	729.666666666667])
-j=1;
-for i= 1:ns
-    semilogy(t1, pure_sec_field(i,:))
-    hold on
-    legend_str1{j} = ['测点',num2str(i)]; j = j+1;
-end
-xlabel('time (ms)')
-ylabel('Voltage (V)')
-legend(legend_str1,'NumColumns',4)
-grid on
-set(gca,'FontSize',16,'FontWeight','bold')
-xlim([0 50])
-%}
-
-%%
 for i=1:ns
     filter_signal = [];
     t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
@@ -72,14 +50,6 @@ for i=1:ns
     sfx1 = lowpass(data_avg_all(i,:),10000,fs,'ImpulseResponse','fir','Steepness',0.95);
 %     sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir');
     sfx2 = sfx1(:,index:end);
-
-%     sfx3 = lowpass(data_avg_all(i,:),10000,fs,'ImpulseResponse','fir');
-%     sfx4 = sfx3(:,index:end);
-%     
-%     figure
-%     loglog(t1, sfx1)
-%     hold on
-%     loglog()
 
     ind_neg = find(sfx2<0); 
     ind_paint = find(sfx2>0);
@@ -114,7 +84,22 @@ for i=1:ns
             sizeNum = [50	50	50	150	200	300	300	500	1000 1000	1000  ]; % 每个时间段对应的窗口宽度
     end
     
-    
+    %% 滤波50Hz
+    %{
+    idx_arr = 10e-3*fs : 70e-3*fs;
+    sig_tar = sfx2(idx_arr);
+%     figure
+%     drawFFT(sig_tar, fs)
+%     xlim([0 100])
+
+    hd = filt50hz;
+    sig_tar2 = filter(hd, sig_tar);
+%     hold on; drawFFT(sig_tar2, fs)
+%     xlim([0 100])
+    sfx2(idx_arr) = sig_tar2;
+    sfx = abs(sfx2);
+    %}
+            %%
     for j = 1:length(timeline)
         windowSize = sizeNum(j);
         b = (1/windowSize)*ones(1,windowSize); a = 1;
@@ -136,39 +121,38 @@ for i=1:ns
     
     
     
-    %{ 
+    % { 
       % 滤波前后对比
-            %%
+        %%
 %             if(i==8)
 %             tst = 13; ted = 23.5;
 %             tst = 11; ted = 23.5;
 %             filterNew = cal_expfit(filter_signal, t1, tst, ted);
 
-                figure('Position',[511	255.666666666667	700	503.333333333333])
-                loglog(t1, pure_sec_field(i,:))
-                hold on
-                loglog(t1, sfx)
-            %     xlim([0,20])
-                ylim([1e-10 1])
-                xlabel('time (ms)');  ylabel('voltage (V)') ; hold on; grid on
-                
-                loglog(t1, filter_signal,'g', "LineWidth", 1.5)
-    %             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
-                
-                
-                legend('Input Data','10kHz Low pass filter','Average filter')
-                xlim([0,80])
-                title(['measurement point ',num2str(i)])
-                set(gca,'FontName','Calibri','FontSize',16,'FontWeight','bold')
-                1;
-    
-                svfig(num2str(i), '.\rawVolt\step3滤波对比')
-                close all
-    %             data_test = pure_sec_field(i,:);
-    %             save data_test data_test t1
-%             end
+            figure('Position',[511	255.666666666667	700	503.333333333333])
+            loglog(t1, pure_sec_field(i,:))
+            hold on
+            loglog(t1, sfx)
+        %     xlim([0,20])
+            ylim([1e-10 1])
+            xlabel('time (ms)');  ylabel('voltage (V)') ; hold on; grid on
+            
+            loglog(t1, filter_signal,'g', "LineWidth", 1.5)
+%             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
+            
+            
+            legend('Input Data','10kHz Low pass filter','Average filter')
+            xlim([0,80])
+            title(['measurement point ',num2str(i)])
+            set(gca,'FontName','Calibri','FontSize',16,'FontWeight','bold')
+            1;
 
+%                 svfig(num2str(i), '.\rawVolt\step3滤波对比')
+
+%             end
+    close all
     %}
+    
     filtered_sec_field = [filtered_sec_field; filter_signal];
     
 end
@@ -263,13 +247,13 @@ for i= 1:ns%
 end
 legend(legend_str3,'NumColumns',4)
 svfig('抽道图', savefolder)
-%}
+
 
 
 
 %%
 % 剖面图
-% {
+
 figure('Position', [20	20	1260	628])
 for i=1:nt
     semilogy(delta_pset.*(pset-min(pset)), 1e3 * signal_sample(:,i))

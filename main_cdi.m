@@ -8,7 +8,7 @@ addpath("D:\willcel\subfunc_mat")
 
 %% 数据预处理的参数
 % 0.5+(1:11)*0.5
-pset = [1:12];  % 测点的坐标，文件夹的名称
+pset = [1:11];  % 测点的坐标，文件夹的名称
 delta_pset = 1;            % 测点之间的距离 （m）
 
 ns = length(pset);                  % 测点的个数
@@ -46,7 +46,7 @@ xr = 0.59;    % 中心距
 
 %%
 step1    % 数据去直流偏置, 叠加求平均
-
+%%
 % 要设 t_ed
 step3                          % 滤波
 % step4_write_txt                  % 将原始数据写入文件
