@@ -45,7 +45,7 @@ nturn1 = 20;          % 接收线圈的匝数
 xr = 0.59;    % 中心距
 
 %%
-step1    % 数据去直流偏置, 叠加求平均
+% step1    % 数据去直流偏置, 叠加求平均
 %%
 % 要设 t_ed
 step3                          % 滤波
@@ -75,4 +75,7 @@ cdi_2
 get_priori
 % get_priori_depDivide
 
-
+%%
+cd ..
+% git clone git@github.com:willcel/EM_singleBP.git
+cd .\EM_singleBP

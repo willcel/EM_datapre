@@ -40,7 +40,7 @@ filtered_sec_field = [];
 
 %%
 for i=1:ns
-    filter_signal = [];
+    
     t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
     t = t(1:ind_neg_final);
     
@@ -53,74 +53,39 @@ for i=1:ns
 
     ind_neg = find(sfx2<0); 
     ind_paint = find(sfx2>0);
-%     figure
-%     semilogy(ind_paint, sfx2(ind_paint),'.')
-%     grid on
-%     figure
-%     semilogy(ind_neg, -sfx2(ind_neg),'.')
-%     grid on
-
     sfx = abs(sfx2);
-%     sfx = sfx2;
-
-%     index_sfx = find(sfx<10^(-7));
-%     sfx(index_sfx) = 10^(-7);
     
- 
-%     sizeNum = [50	100	100	200	200	400	400	800	800	800	1000    ];
-%     sizeNum = 5*ones(1,17);
     j=1;
     
     % 时间段分割点
            timeline = [0.5  1   2   3   4   5   6   9   12   15    20   ] + t_st * 1e3;
     switch i
-        %case 8
-%             sizeNum = [50	100	200	300	300	600	600	1000 1000 1000	1000  ];
-%             sizeNum = [50	50	50	150	200	300	300	500	1000 1000	1000  ];
-%             sizeNum = 500*ones(1,11);
-%             sizeNum = [50	50	50	100	200	300	500	600  1000 1500	2000  ];
-
         otherwise
-            sizeNum = [50	50	50	150	200	300	300	500	1000 1000	1000  ]; % 每个时间段对应的窗口宽度
+            sizeNum = [50	50	100	150	200	300	400	500	800 1000	1000  ]; % 每个时间段对应的窗口宽度
     end
     
     %% 滤波50Hz
-    %{
-    idx_arr = 10e-3*fs : 70e-3*fs;
+    % {
+    idx_arr = 4.5e-3*fs : 70e-3*fs;
     sig_tar = sfx2(idx_arr);
+%     hd = filt50hz;
+%     sig_tar2 = filter(hd, sig_tar);
+    sig_tar2 = notchfilt(sig_tar, 50, fs);
+
 %     figure
 %     drawFFT(sig_tar, fs)
 %     xlim([0 100])
-
-    hd = filt50hz;
-    sig_tar2 = filter(hd, sig_tar);
 %     hold on; drawFFT(sig_tar2, fs)
-%     xlim([0 100])
+
     sfx2(idx_arr) = sig_tar2;
-    sfx = abs(sfx2);
+    sfx3 = abs(sfx2);
     %}
-            %%
-    for j = 1:length(timeline)
-        windowSize = sizeNum(j);
-        b = (1/windowSize)*ones(1,windowSize); a = 1;
-     
-        filter_index =find(t*1e3 > timeline(j), 1);
-        y = filter(b,a,sfx(:)');
-        
-        switch j
-            case 1
-                stidx = min(150, filter_index-1);
-                filter_signal = [filter_signal, pure_sec_field(i,1:stidx-1), y(stidx:filter_index-1)];
-            case length(timeline)
-                filter_signal = [filter_signal, y(lastidx:end)];
-            otherwise
-                filter_signal = [filter_signal, y(lastidx:filter_index-1)];
-        end
-        lastidx = filter_index;
-    end
+     %%
+
     
-    
-    
+    filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field, i);
+    filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field, i);
+
     % { 
       % 滤波前后对比
         %%
@@ -132,28 +97,27 @@ for i=1:ns
             figure('Position',[511	255.666666666667	700	503.333333333333])
             loglog(t1, pure_sec_field(i,:))
             hold on
-            loglog(t1, sfx)
-        %     xlim([0,20])
-            ylim([1e-10 1])
-            xlabel('time (ms)');  ylabel('voltage (V)') ; hold on; grid on
-            
+%             loglog(t1, sfx)
+%             loglog(t1, sfx3, "LineWidth", 1)
             loglog(t1, filter_signal,'g', "LineWidth", 1.5)
+            loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
 %             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
             
             
-            legend('Input Data','10kHz Low pass filter','Average filter')
+            legend('Input Data','低通+均值','低通+陷波+均值')
             xlim([0,80])
+            ylim([1e-10 1])
             title(['measurement point ',num2str(i)])
-            set(gca,'FontName','Calibri','FontSize',16,'FontWeight','bold')
-            1;
+            set(gca,'FontSize',16,'FontWeight','bold')
+            xlabel('time (ms)');  ylabel('voltage (V)') ; hold on; grid on
 
-%                 svfig(num2str(i), '.\rawVolt\step3滤波对比')
+            svfig(num2str(i), '.\rawVolt\step3滤波对比')
 
 %             end
     close all
     %}
     
-    filtered_sec_field = [filtered_sec_field; filter_signal];
+    filtered_sec_field = [filtered_sec_field; filter_signal2];
     
 end
 
@@ -301,3 +265,25 @@ xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 %%
 save('signal_sample.mat','signal_sample')
 step4_write_txt
+
+function filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field, i)
+    filter_signal = [];
+    for j = 1:length(timeline)
+        windowSize = sizeNum(j);
+        b = (1/windowSize)*ones(1,windowSize); a = 1;
+     
+        filter_index =find(t*1e3 > timeline(j), 1);
+        y = filter(b,a,sfx(:)');
+        
+        switch j
+            case 1
+                stidx = min(150, filter_index-1);
+                filter_signal = [filter_signal, pure_sec_field(i,1:stidx-1), y(stidx:filter_index-1)];
+            case length(timeline)
+                filter_signal = [filter_signal, y(lastidx:end)];
+            otherwise
+                filter_signal = [filter_signal, y(lastidx:filter_index-1)];
+        end
+        lastidx = filter_index;
+    end
+end
