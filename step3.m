@@ -65,7 +65,7 @@ for i=1:ns
     end
     
     %% 滤波50Hz
-    % {
+    %{
     idx_arr = 4.5e-3*fs : 70e-3*fs;
     sig_tar = sfx2(idx_arr);
 %     hd = filt50hz;
@@ -79,12 +79,14 @@ for i=1:ns
 
     sfx2(idx_arr) = sig_tar2;
     sfx3 = abs(sfx2);
+
+    filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field, i);
     %}
      %%
 
     
     filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field, i);
-    filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field, i);
+    
 
     % { 
       % 滤波前后对比
@@ -100,7 +102,7 @@ for i=1:ns
 %             loglog(t1, sfx)
 %             loglog(t1, sfx3, "LineWidth", 1)
             loglog(t1, filter_signal,'g', "LineWidth", 1.5)
-            loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
+%             loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
 %             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
             
             
@@ -117,7 +119,8 @@ for i=1:ns
     close all
     %}
     
-    filtered_sec_field = [filtered_sec_field; filter_signal2];
+    filtered_sec_field = [filtered_sec_field; filter_signal];
+%     filtered_sec_field = [filtered_sec_field; filter_signal2];
     
 end
 
