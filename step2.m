@@ -62,7 +62,7 @@ for k=1:ns
 
 %         figure(Position=[242.33333333333	151	1106.00000000000	643.333333333333])
 %         subplot(2,1,1)
-% %         semilogy(time, data_receive_coil)
+%         semilogy(time, data_receive_coil)
 %         plot(time, data_receive_coil, 'Color', [1 0.5 0], 'LineWidth',1.5)
 %         xlabel('time(s)')
 %         ylabel('voltage (V)')
@@ -74,8 +74,8 @@ for k=1:ns
 %         set(gca,'FontSize',16,'FontWeight','bold')
 %         text(-0.1,1.05,'(a)','Units','normalized','FontSize',22)
 % 
-% %         figure
-%         subplot(2,1,2)
+%         figure
+% %         subplot(2,1,2)
 %         plot(time, current, 'Color', [0 1 1], 'LineWidth',1.5)
 %         hold on
 %         scatter(time(index_peak), current(index_peak),'ro')

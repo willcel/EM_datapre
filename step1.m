@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\1227卫岗测试\测量数据\贴地';
+folder_path = 'D:\willcel\0109测试\1.9汤山\1.9汤山30m新阻尼';
 needExaminDetail = 1;
 
 data_avg_all = [];
@@ -9,8 +9,8 @@ current_avg_all = [];
 for k = 1:ns
     k
     % 获取文件夹内所有的 txt 文件名
-    volt_files = dir(fullfile(folder_path,num2str(k), '*_192.168.2.100_0_*.txt'));
-    curr_files = dir(fullfile(folder_path,num2str(k), '*_192.168.2.100_2_*.txt'));
+    volt_files = dir(fullfile(folder_path,num2str(k), '*_192.168.2.80_0_*.txt'));
+    curr_files = dir(fullfile(folder_path,num2str(k), '*_192.168.2.80_1_*.txt'));
 
     % 对每个 CSV 文件进行处理
     data_offset = [];

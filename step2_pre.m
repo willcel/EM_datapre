@@ -42,7 +42,7 @@ for k=1:ns
     ind11 = find(diff_current>1.5);
     point1 = min(intersect(set1,ind11));
 
-%     point1 = 1;
+    point1 = 0;
 
     point1bank = [point1bank; point1];
 

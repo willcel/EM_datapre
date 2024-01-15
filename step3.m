@@ -85,7 +85,7 @@ for i=1:ns
      %%
 
     
-    filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field, i);
+    filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field(i,:));
     
 
     % { 
@@ -269,24 +269,3 @@ xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 save('signal_sample.mat','signal_sample')
 step4_write_txt
 
-function filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field, i)
-    filter_signal = [];
-    for j = 1:length(timeline)
-        windowSize = sizeNum(j);
-        b = (1/windowSize)*ones(1,windowSize); a = 1;
-     
-        filter_index =find(t*1e3 > timeline(j), 1);
-        y = filter(b,a,sfx(:)');
-        
-        switch j
-            case 1
-                stidx = min(150, filter_index-1);
-                filter_signal = [filter_signal, pure_sec_field(i,1:stidx-1), y(stidx:filter_index-1)];
-            case length(timeline)
-                filter_signal = [filter_signal, y(lastidx:end)];
-            otherwise
-                filter_signal = [filter_signal, y(lastidx:filter_index-1)];
-        end
-        lastidx = filter_index;
-    end
-end
