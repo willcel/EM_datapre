@@ -65,44 +65,66 @@ for i=1:ns
     end
     
     %% 滤波50Hz
-    %{
+    % {
     idx_arr = 4.5e-3*fs : 70e-3*fs;
     sig_tar = sfx2(idx_arr);
-%     hd = filt50hz;
-%     sig_tar2 = filter(hd, sig_tar);
+% 
+%{
+    beipin_bank = [];
+    for iter = 1:1
+        tic
+        f0 = 50;
+        [peak1, peak2, phi0] = beipin(sig_tar,f0,fs);
+        beipin_bank(iter,:) = [f0, peak1, peak2, phi0];
+        toc
+    end
+    sig_tar2 = sig_tar; 
+    N = length(sig_tar2);
+    t2 = (1:N) / fs;
+    for iter = 1:1
+        f0 = 50;
+        peak2 = beipin_bank(iter,3);
+        phi0 = beipin_bank(iter,4);
+        cfs = peak1*sin(2*pi*f0*t2 + phi0);
+        sig_tar2 = sig_tar2 - cfs;
+    end
+%}
     sig_tar2 = notchfilt(sig_tar, 50, fs);
 
 %     figure
 %     drawFFT(sig_tar, fs)
-%     xlim([0 100])
-%     hold on; drawFFT(sig_tar2, fs)
+%     xlim([0 1e3])
+%     hold on; 
+%     drawFFT(sig_tar2, fs)
+%     legend('去噪前','去噪后')
 
     sfx2(idx_arr) = sig_tar2;
     sfx3 = abs(sfx2);
 
-    filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field, i);
+    filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field(i,:));
     %}
-     %%
+    %%
 
-    
     filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field(i,:));
     
 
-    % { 
+    %{ 
       % 滤波前后对比
         %%
-%             if(i==8)
+%             if(mod(i,20)==1)
+            if(i==160)
+                
 %             tst = 13; ted = 23.5;
 %             tst = 11; ted = 23.5;
 %             filterNew = cal_expfit(filter_signal, t1, tst, ted);
-
+        
             figure('Position',[511	255.666666666667	700	503.333333333333])
             loglog(t1, pure_sec_field(i,:))
             hold on
 %             loglog(t1, sfx)
 %             loglog(t1, sfx3, "LineWidth", 1)
             loglog(t1, filter_signal,'g', "LineWidth", 1.5)
-%             loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
+            loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
 %             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
             
             
@@ -115,11 +137,12 @@ for i=1:ns
 
             svfig(num2str(i), '.\rawVolt\step3滤波对比')
 
-%             end
-    close all
-    %}
+            end
     
-    filtered_sec_field = [filtered_sec_field; filter_signal];
+    %}
+    close all
+
+    filtered_sec_field = [filtered_sec_field; filter_signal2];
 %     filtered_sec_field = [filtered_sec_field; filter_signal2];
     
 end
@@ -170,50 +193,50 @@ savefolder = '.\rawVolt';
 % {
 
 %% 单挑线画图保存，取点
-% signal_sample(8,:) = cal_expfit(signal_sample(8,:), time_sample, time_sample(29), time_sample(33));
+signal_sample(160,:) = (signal_sample(159,:) +signal_sample(161,:) )/2;
 % signal_sample(8,:) = cal_expfit(signal_sample(8,:), time_sample, time_sample(38), time_sample(42));
 
-for i= 1:ns%
-    figure(Position=[10.333333333333	14.333333333333	908.66666666667	518])
-    loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
-    
-    legend_str = ['测点',num2str(i)];
-
-    hold on; grid on;
-    xlabel('time (ms)');  ylabel('voltage (V)')
-    set(gca,'FontSize',24,'FontWeight','bold')
-    legend(legend_str,'NumColumns',4)
-    for j = 1:nt
-        text(time_sample(j)*1000, signal_sample(i,j), num2str(j), ...
-        'HorizontalAlignment', 'center', ...
-        'VerticalAlignment', 'bottom', 'FontSize', 10);
-    end
-    ylim([1e-6 1e-1])
-    svfig(legend_str, savefolder)
-    close all
-    
-end
+% for i= 1:ns%
+%     figure(Position=[10.333333333333	14.333333333333	908.66666666667	518])
+%     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
+%     
+%     legend_str = ['测点',num2str(i)];
+% 
+%     hold on; grid on;
+%     xlabel('time (ms)');  ylabel('voltage (V)')
+%     set(gca,'FontSize',24,'FontWeight','bold')
+%     legend(legend_str,'NumColumns',4)
+%     for j = 1:nt
+%         text(time_sample(j)*1000, signal_sample(i,j), num2str(j), ...
+%         'HorizontalAlignment', 'center', ...
+%         'VerticalAlignment', 'bottom', 'FontSize', 10);
+%     end
+%     ylim([1e-6 1e-1])
+%     svfig(legend_str, savefolder)
+%     close all
+%     
+% end
 
 
 
 %% 把所有抽道的线画在同一张图中
-k=1;
-figure(Position=[10.333333333333	14.333333333333	908.66666666667	518])
-
-for i= 1:ns%
-    
-    loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
-    
-    legend_str3{k} = ['测点',num2str(i)]; k= k+1;
-
-    hold on; grid on;
-    xlabel('time (ms)');  ylabel('voltage (V)')
-    set(gca,'FontSize',24,'FontWeight','bold')
-
-%     ylim([1e-6 1e-1])
-end
-legend(legend_str3,'NumColumns',4)
-svfig('抽道图', savefolder)
+% k=1;
+% figure(Position=[10.333333333333	14.333333333333	908.66666666667	518])
+% 
+% for i= 1:ns%
+%     
+%     loglog(time_sample*1000, signal_sample(i,:),'-*', 'LineWidth',1.0)
+%     
+%     legend_str3{k} = ['测点',num2str(i)]; k= k+1;
+% 
+%     hold on; grid on;
+%     xlabel('time (ms)');  ylabel('voltage (V)')
+%     set(gca,'FontSize',24,'FontWeight','bold')
+% 
+% %     ylim([1e-6 1e-1])
+% end
+% legend(legend_str3,'NumColumns',4)
+% svfig('抽道图', savefolder)
 
 
 

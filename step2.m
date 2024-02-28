@@ -53,8 +53,10 @@ for k=1:ns
     set1 = 1:ind;   % 电流到达峰值的前半段
     ind11 = find(diff_current>1.5);
     point1 = min(intersect(set1,ind11));
-    
-    if(1)
+    if(isempty(point1))
+        point1 = 1;
+    end
+    if(0)
 
         kk = k; %7;
         data_receive_coil = data_avg_all(kk, :);

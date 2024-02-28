@@ -8,13 +8,10 @@ addpath("D:\willcel\subfunc_mat")
 
 %% 数据预处理的参数
 % 0.5+(1:11)*0.5
-pset = [1:15];  % 测点的坐标，文件夹的名称
+pset = [1:163];  % 测点的坐标，文件夹的名称
 delta_pset = 1;            % 测点之间的距离 （m）
 
 ns = length(pset);                  % 测点的个数
-
-factor = 1/10;                        % 回波的放大倍数
-factor_current = 1*100;              % 电流的放大倍数
 
 % no_of_measurement = 100;        % 每个测点的测量次数
 
@@ -34,13 +31,16 @@ total_depth = 40;           % 最大深度 m
 nolayer = 5;
 
 %% 发射参数
+factor = 1/0.22/10;                        % 回波的放大倍数
+factor_current = 1/0.22*200;              % 电流的放大倍数
+
 hr = 0.63;   % 接收线圈的高度
 
 rt = 0.5;                 % 发射线圈的半径 m
 nturn = 3;              % 线圈的匝数
 
 rr = 0.25;               % 接收线圈的半径 m
-nturn1 = 20;          % 接收线圈的匝数
+nturn1 = 80;          % 接收线圈的匝数
 
 xr = 0.59;    % 中心距
 
