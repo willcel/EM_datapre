@@ -66,7 +66,8 @@ for i=1:ns
     
     %% 滤波50Hz
     % {
-    idx_arr = 4.5e-3*fs : 70e-3*fs;
+    
+    idx_arr = 4.5e-3*fs : length(sfx2);
     sig_tar = sfx2(idx_arr);
 % 
 %{
@@ -79,14 +80,18 @@ for i=1:ns
         toc
     end
     sig_tar2 = sig_tar; 
+
     N = length(sig_tar2);
-    t2 = (1:N) / fs;
+    N2 = idx_arr(1) - 2 ;
+    t2 = (-N2:N) / fs;
     for iter = 1:1
         f0 = 50;
         peak2 = beipin_bank(iter,3);
         phi0 = beipin_bank(iter,4);
         cfs = peak1*sin(2*pi*f0*t2 + phi0);
-        sig_tar2 = sig_tar2 - cfs;
+%         sig_tar2 = sig_tar2 - cfs;
+        sfx2 = sfx2 - cfs;
+        sfx3 = abs(sfx2);
     end
 %}
     sig_tar2 = notchfilt(sig_tar, 50, fs);
@@ -95,11 +100,10 @@ for i=1:ns
 %     drawFFT(sig_tar, fs)
 %     xlim([0 1e3])
 %     hold on; 
-%     drawFFT(sig_tar2, fs)
+%     drawFFT(sfx2(idx_arr), fs)
 %     legend('去噪前','去噪后')
 
-    sfx2(idx_arr) = sig_tar2;
-    sfx3 = abs(sfx2);
+
 
     filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field(i,:));
     %}
@@ -112,7 +116,7 @@ for i=1:ns
       % 滤波前后对比
         %%
 %             if(mod(i,20)==1)
-            if(i==160)
+            if(i==1)
                 
 %             tst = 13; ted = 23.5;
 %             tst = 11; ted = 23.5;
@@ -150,38 +154,7 @@ end
 
 
 %% 选择抽道时刻
-delta_t = (log10(t_ed)-log10(t_st))/(nt-1);
-
-time_log = zeros(1,nt);
-ind_time = [];
-
-for i=1:nt
-    
-    logt = log10(t_st)+(i-1)*delta_t;
-    time_log(i) = 10^logt;
-    
-    tmp1 = t-time_log(i);
-    
-    tmp = find(tmp1>0, 1);
-
-%     tmp2 = find(abs(tmp1) < 1e-6);
-%     tmp = tmp2(1);
-    
-    if(i==1)
-        if(isempty(tmp))
-            ind_time = [ind_time; 1]; % 防止第一个抽道时刻，tmp为0的向量
-        else
-            ind_time = [ind_time; tmp];
-        end
-        
-%         
-    else
-        ind_time = [ind_time; tmp];
-    end
-end
-
-time_sample = t(ind_time);
-signal_sample = filtered_sec_field(:,ind_time);
+[time_sample, signal_sample] = chouDao(t, filtered_sec_field, t_st, t_ed, nt);
 
 % load Xhat
 % signal_sample = Xhat;
@@ -193,7 +166,7 @@ savefolder = '.\rawVolt';
 % {
 
 %% 单挑线画图保存，取点
-signal_sample(160,:) = (signal_sample(159,:) +signal_sample(161,:) )/2;
+% signal_sample(160,:) = (signal_sample(159,:) +signal_sample(161,:) )/2;
 % signal_sample(8,:) = cal_expfit(signal_sample(8,:), time_sample, time_sample(38), time_sample(42));
 
 % for i= 1:ns%
