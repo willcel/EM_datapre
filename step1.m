@@ -1,7 +1,7 @@
 % 定义文件夹路径
 % clear
 dbstop if error
-folder_path = 'D:\willcel\2024.0129无人车东流试验数据ghl\测线1';
+folder_path = 'D:\willcel\2024.03.09汤山试验-WRJ\试验数据\测线1收发线圈距离地面1.5m(土堆上方1)';
 needExaminDetail = 1;
 
 data_avg_all = [];
@@ -9,8 +9,8 @@ current_avg_all = [];
 for k = 1:ns
     k
     % 获取文件夹内所有的 txt 文件名
-    volt_files = dir(fullfile(folder_path, [num2str(k), '_192.168.2.80_0_*.txt']));
-    curr_files = dir(fullfile(folder_path, [num2str(k), '_192.168.2.80_1_*.txt']));
+    volt_files = dir(fullfile(folder_path, [num2str(k), '_192.168.2.100_0_*.txt']));
+    curr_files = dir(fullfile(folder_path, [num2str(k), '_192.168.2.100_2_*.txt']));
 
     % 对每个 CSV 文件进行处理
     data_offset = [];
@@ -56,9 +56,12 @@ for k = 1:ns
 %             svdata = signal.*factor;
 %             save data_step svdata time
 %             ylim([0,3]*1e-4)
-                
+            
+            figure
             subplot(2,1,2)
-            plot(time*1000, current.*factor_current,'LineWidth',2.0)                
+            semilogy(time*1000, (current).*factor_current,'LineWidth',2.0)   
+            hold on
+            semilogy(time*1000, -(current).*factor_current,'LineWidth',2.0)    
             xlim([0,5])
             xlabel('time(ms)')
             ylabel('current (A)')

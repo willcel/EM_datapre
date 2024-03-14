@@ -60,7 +60,7 @@ for uu=1:ns
     ntstop = 56*ones(1,ns);[13 20 20 29 27 45 25];
              % 1 /2/ 3/4 /5 /6/ 7 /8 /9 /10/11/12/13/14/15/16/17/18/19/20/21/ 
 %     ntstop(7) = 2;
-%     index = 1;
+    index = 1;
     for i=1:ntstop(uu)%nt
         
         minerr = 1000;
@@ -87,8 +87,8 @@ for uu=1:ns
     end
     
 
-%     c = 0.7; b2 = 0.4;
-    c = 5; b2 = 0.6;
+    c = 0.5; b2 = 0.4;
+%     c = 5; b2 = 0.6;
 %     if ismember(uu,[34:38])
 %         c = 5; b2 = 0.6;
 %     else
@@ -186,6 +186,7 @@ set(gca,'FontSize',18,'FontWeight','bold')
 % set(gca,'yticklabel',{'10','8','6','4','2'});
 set(gca,'ydir','reverse')
 hold on
+ylim([0 20])
 title('视电阻率成像')
 svfig('CDI成像', './rawVolt')
 for i = 1:ns

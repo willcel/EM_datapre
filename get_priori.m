@@ -141,7 +141,7 @@ end
 
 y = 0:0.01:total_depth-0.01;
 xdraw_range = [pset, pset(end)+1]; mat = [mat;zeros(1,total_depth*scale_factor)];
-figure(Position=[137	142.333333333333	991.333333333333	650.666666666667])
+figure(Position=[83.666666666667	189.666666666667	1246	600.666666666667]) 
 pcolor(delta_pset*(xdraw_range - min(xdraw_range)),y,log10(mat'))
 shading flat
 colormap jet

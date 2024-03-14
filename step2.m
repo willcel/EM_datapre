@@ -140,6 +140,10 @@ for k=1:ns
     
 end
 
+%%
+% point4set( 27 * 2 - 1)
+% point4set(1:2:2*ns-1) = 2.18e-3;
+%%
 save('point1set.txt','point1set','-ascii')
 save('point2set.txt','point2set','-ascii')
 save('point3set.txt','point3set','-ascii')

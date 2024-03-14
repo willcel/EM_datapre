@@ -3,12 +3,12 @@ clc
 clear
 % close all
 dbstop if error
-%% ---------------------- 参数设置 ----------------------------------
+% ---------------------- 参数设置 ----------------------------------
 addpath("D:\willcel\subfunc_mat")
 
-%% 数据预处理的参数
+% 数据预处理的参数
 % 0.5+(1:11)*0.5
-pset = [1:163];  % 测点的坐标，文件夹的名称
+pset = [1:57];  % 测点的坐标，文件夹的名称
 delta_pset = 1;            % 测点之间的距离 （m）
 
 ns = length(pset);                  % 测点的个数
@@ -17,27 +17,27 @@ ns = length(pset);                  % 测点的个数
 
 fs = 256e3;  % 1.25*10^6;
 
-%% ------------------- 数据预处理 ----------------------------------
+% ------------------- 数据预处理 ----------------------------------
 
 
 
-%% 数据采样
+% 数据采样
 nt = 56;                        % 抽道时间
-t_st = 2.04e-3; %            % 起始时间        
+t_st = 2.21e-3; %            % 起始时间        
 t_ed = 20e-3;       % 结束时间 
 
-%% 反演参数
-total_depth = 40;           % 最大深度 m
+% 反演参数
+total_depth = 30;           % 最大深度 m
 nolayer = 5;
 
-%% 发射参数
-factor = 1/0.22/10;                        % 回波的放大倍数
-factor_current = 1/0.22*200;              % 电流的放大倍数
+% 发射参数
+factor = 1/10;                        % 回波的放大倍数
+factor_current = 1*100;              % 电流的放大倍数
 
-hr = 0.63;   % 接收线圈的高度
+hr = 3;   % 接收线圈的高度
 
 rt = 0.5;                 % 发射线圈的半径 m
-nturn = 3;              % 线圈的匝数
+nturn = 8;              % 线圈的匝数
 
 rr = 0.25;               % 接收线圈的半径 m
 nturn1 = 80;          % 接收线圈的匝数
@@ -51,6 +51,7 @@ step1    % 数据去直流偏置, 叠加求平均
 step3                          % 滤波
 % step4_write_txt                  % 将原始数据写入文件
 
+%% cd CDI*
 % { 
 % -----------
 path_cdi = ['.\CDI_code\'];   % 视电阻率成像的程序所在文件夹
@@ -77,5 +78,7 @@ get_priori
 
 %%
 cd ..
-% git clone git@github.com:willcel/EM_singleBP.git
+
+% cd ../../ && git clone git@github.com:willcel/EM_singleBP.git && cd ./EM_singleBP
 cd .\EM_singleBP
+% main_cdi

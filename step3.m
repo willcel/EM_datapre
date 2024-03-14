@@ -39,7 +39,7 @@ ind_neg_final = size(data_avg_all, 2)-index+1;
 filtered_sec_field = [];
 
 %%
-for i=1:ns
+for i=  1:ns
     
     t = time(index:end);    % 这里t的起始值就是抽道的起始时刻
     t = t(1:ind_neg_final);
@@ -47,12 +47,12 @@ for i=1:ns
     t1 = t*1000;
     
     % low pass filter 30kHz
+    sfx_raw = data_avg_all(i, index:end);
+    sfx_raw = abs(sfx_raw);
     sfx1 = lowpass(data_avg_all(i,:),10000,fs,'ImpulseResponse','fir','Steepness',0.95);
 %     sfx1 = lowpass(data_avg_all(i,:),30000,fs,'ImpulseResponse','fir');
     sfx2 = sfx1(:,index:end);
 
-    ind_neg = find(sfx2<0); 
-    ind_paint = find(sfx2>0);
     sfx = abs(sfx2);
     
     j=1;
@@ -94,46 +94,54 @@ for i=1:ns
         sfx3 = abs(sfx2);
     end
 %}
-    sig_tar2 = notchfilt(sig_tar, 50, fs);
+    sig_tar2 = sig_tar;
+%     sig_tar2 = notchfilt(sig_tar2, 50, fs);
+    sig_tar2 = notchfilt(sig_tar2, 966, fs);
+%     sig_tar2 = notchfilt(sig_tar2, 15055, fs);
+    
+    sfx3 = abs(sfx2);
+    sfx3(idx_arr) = sig_tar2;
+    sfx3 = abs(sfx3);
 
-%     figure
-%     drawFFT(sig_tar, fs)
-%     xlim([0 1e3])
-%     hold on; 
-%     drawFFT(sfx2(idx_arr), fs)
-%     legend('去噪前','去噪后')
-
+    %{
+    figure
+    drawFFT(sig_tar, fs)
+    xlim([0 17e3])
+    hold on; 
+    drawFFT(sig_tar2, fs)
+    legend('去噪前','去噪后')
+    %}
 
 
     filter_signal2 = meanFilt(t, sfx3, timeline, sizeNum, pure_sec_field(i,:));
     %}
     %%
-
+    filter_raw = meanFilt(t, sfx_raw, timeline, sizeNum, pure_sec_field(i,:));
     filter_signal = meanFilt(t, sfx, timeline, sizeNum, pure_sec_field(i,:));
     
 
     %{ 
       % 滤波前后对比
         %%
-%             if(mod(i,20)==1)
-            if(i==1)
-                
-%             tst = 13; ted = 23.5;
-%             tst = 11; ted = 23.5;
-%             filterNew = cal_expfit(filter_signal, t1, tst, ted);
-        
+            if(mod(i,5)==1)
+
             figure('Position',[511	255.666666666667	700	503.333333333333])
             loglog(t1, pure_sec_field(i,:))
             hold on
-%             loglog(t1, sfx)
-%             loglog(t1, sfx3, "LineWidth", 1)
-            loglog(t1, filter_signal,'g', "LineWidth", 1.5)
-            loglog(t1, filter_signal2,'r', "LineWidth", 1.5)
-%             loglog(t1, filterNew, 'm', "LineWidth", 1.5)
-            
-            
-            legend('Input Data','低通+均值','低通+陷波+均值')
-            xlim([0,80])
+            loglog(t1, sfx)
+            loglog(t1, filter_signal2,'g', "LineWidth", 1.5)
+            legend('Input Data','低通','低通+陷波+均值')
+
+%             figure
+%             
+%             loglog(t1, filter_raw, "LineWidth", 1.5)
+%             hold on
+%             loglog(t1, filter_signal, "LineWidth", 1.5)
+%             loglog(t1, filter_signal2,'g', "LineWidth", 1.5)
+%             legend('原信号+均值','原信号+低通+均值','原信号+低通+陷波+均值')
+
+            adjustFig
+            xlim([0,20])
             ylim([1e-10 1])
             title(['measurement point ',num2str(i)])
             set(gca,'FontSize',16,'FontWeight','bold')
@@ -212,7 +220,8 @@ savefolder = '.\rawVolt';
 % svfig('抽道图', savefolder)
 
 
-
+%% PCA
+[signal_sample, ~] = MNF(signal_sample, 2);
 
 %%
 % 剖面图
@@ -221,7 +230,7 @@ figure('Position', [20	20	1260	628])
 for i=1:nt
     semilogy(delta_pset.*(pset-min(pset)), 1e3 * signal_sample(:,i))
     hold on
-    xlabel('Measurement Line / m')
+    xlabel('Measurement Point')
     ylabel('Voltage / mV')
     legend_str2{i} = ['t = ',num2str(time_sample(i)*1000),' ms']; 
 end
@@ -231,17 +240,17 @@ set(gca,'FontSize',14,'FontWeight','bold')
 xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 
 xlabel_pos = delta_pset.*(pset-min(pset));
-for i = 1:ns
+for i = 2:2:ns
     text(xlabel_pos(i), 1e3 * signal_sample(i,2), ['',num2str(i)], ...
     'HorizontalAlignment', 'center', ...
     'VerticalAlignment', 'bottom', 'FontSize', 16);
 end
-
+set(gca,'LineWidth',1.2)
 % legend('')
 
 svfig('剖面图', savefolder)
-legend(legend_str2,'NumColumns',4)
-svfig('剖面图带legend', savefolder)
+% legend(legend_str2,'NumColumns',4)
+% svfig('剖面图带legend', savefolder)
 % close all
 %}
 %{
@@ -261,6 +270,7 @@ legend(legend_str2,'NumColumns',4)
 set(gca,'FontSize',14,'FontWeight','bold')
 xlim([min(delta_pset.*(pset-min(pset))),max(delta_pset.*(pset-min(pset)))])
 %}
+
 %%
 save('signal_sample.mat','signal_sample')
 step4_write_txt
